@@ -82,7 +82,23 @@ cd stages/4.5.0
 
 ```
 
-## 
+## 5. TLS support 
+
+Run:  (It will startup nameserver and broker with SSL enabled style. The client will not invoke nameserver or broker until related SSL client is configurated. ) 
+
+You can see detailed TLS config instruction from [here](templates/ssl/README.md) 
+
+```
+cd stages/4.5.0 
+
+./play-docker-tls.sh
+
+# Once nameserver and broker startup correctly, you still can use the following script to test produce/consume in SSL mode, why, due to they still use the SSL setting which exists in JAVA-OPT of the docker rmqbroker container. 
+./play-producer.sh
+./play-consumer.sh
+```
+
+
 
 ### To use specified heap size for JVM
 
