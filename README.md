@@ -1,4 +1,4 @@
-# RocketMQ-Docker
+# RocketMQ-Docker [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 This is the Git repo of the Docker Image for Apache RocketMQ. You could run it through the following ways: 
 
