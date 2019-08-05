@@ -44,16 +44,13 @@ ENV ROCKETMQ_VERSION ${version}
 # Rocketmq home
 ENV ROCKETMQ_HOME  /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}
 
-# Java home
-ENV JAVA_HOME  /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.212.b04-0.el7_6.x86_64
-
 WORKDIR  ${ROCKETMQ_HOME}
 
 RUN set -eux; \
-    curl -s https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o rocketmq.zip; \
-    curl -s https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip.asc -o rocketmq.zip.asc; \
+    curl https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o rocketmq.zip; \
+    curl https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip.asc -o rocketmq.zip.asc; \
     #https://www.apache.org/dist/rocketmq/KEYS
-	curl -s https://www.apache.org/dist/rocketmq/KEYS -o KEYS; \
+	curl https://www.apache.org/dist/rocketmq/KEYS -o KEYS; \
 	\
 	gpg --import KEYS; \
     gpg --batch --verify rocketmq.zip.asc rocketmq.zip ; \
