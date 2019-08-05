@@ -73,7 +73,7 @@ RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserve
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv
 
 # expose broker ports
-EXPOSE 10909 10911
+EXPOSE 10909 10911 10912
 
 # add customized scripts for broker
 RUN mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
