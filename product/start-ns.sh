@@ -33,5 +33,5 @@ echo "DATA_HOME=${DATA_HOME} ROCKETMQ_VERSION=${ROCKETMQ_VERSION}"
 docker run -d -v ${DATA_HOME}/logs:/home/rocketmq/logs \
   --name rmqnamesrv \
   -p 9876:9876 \
-  rocketmqinc/rocketmq:ROCKETMQ_VERSION \
+  rocketmqinc/rocketmq:${ROCKETMQ_VERSION} \
   sh mqnamesrv
