@@ -47,6 +47,10 @@ cd stages/4.5.0
 ./play-docker.sh
 
 ```
+> NOTE:
+Some Linux Systems (e.g. Ubuntu) may generate path 
+```stages/4.5.0/template```, please adjust the command accordingly.
+
 
 #### 2. Cluster with docker-compose
 

@@ -44,16 +44,13 @@ ENV ROCKETMQ_VERSION ${version}
 # Rocketmq home
 ENV ROCKETMQ_HOME  /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}
 
-# Java home
-ENV JAVA_HOME  /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.212.b04-0.el7_6.x86_64
-
 WORKDIR  ${ROCKETMQ_HOME}
 
 RUN set -eux; \
-    curl -s https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o rocketmq.zip; \
-    curl -s https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip.asc -o rocketmq.zip.asc; \
+    curl https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o rocketmq.zip; \
+    curl https://dist.apache.org/repos/dist/release/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip.asc -o rocketmq.zip.asc; \
     #https://www.apache.org/dist/rocketmq/KEYS
-	curl -s https://www.apache.org/dist/rocketmq/KEYS -o KEYS; \
+	curl https://www.apache.org/dist/rocketmq/KEYS -o KEYS; \
 	\
 	gpg --import KEYS; \
     gpg --batch --verify rocketmq.zip.asc rocketmq.zip ; \
@@ -76,7 +73,7 @@ RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserve
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv
 
 # expose broker ports
-EXPOSE 10909 10911
+EXPOSE 10909 10911 10912
 
 # add customized scripts for broker
 RUN mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
