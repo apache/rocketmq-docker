@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 RMQ_CONTAINER=$(docker ps -a|awk '/rmq/ {print $1}')
 if [[ -n "$RMQ_CONTAINER" ]]; then
    echo "Removing RocketMQ Container..."
@@ -33,7 +48,7 @@ docker run --net dledger-br --ip 172.18.0.12 -d -p 30911:30911 -p 30909:30909 -v
 docker run --net dledger-br --ip 172.18.0.13 -d -p 30921:30921 -p 30919:30919 -v `pwd`/data/broker1/logs:/home/rocketmq/logs -v `pwd`/data/broker1/store:/home/rocketmq/store -v `pwd`/data/broker1/conf/dledger:/opt/rocketmq-ROCKETMQ_VERSION/conf/dledger --name rmqbroker1 --link rmqnamesrv:namesrv -e "MAX_POSSIBLE_HEAP=200000000" -e "NAMESRV_ADDR=namesrv:9876" rocketmqinc/rocketmq:ROCKETMQ_VERSION sh mqbroker  -c  ../conf/dledger/broker.conf
 docker run --net dledger-br --ip 172.18.0.14 -d -p 30931:30931 -p 30929:30929 -v `pwd`/data/broker2/logs:/home/rocketmq/logs -v `pwd`/data/broker2/store:/home/rocketmq/store -v `pwd`/data/broker2/conf/dledger:/opt/rocketmq-ROCKETMQ_VERSION/conf/dledger --name rmqbroker2 --link rmqnamesrv:namesrv -e "MAX_POSSIBLE_HEAP=200000000" -e "NAMESRV_ADDR=namesrv:9876" rocketmqinc/rocketmq:ROCKETMQ_VERSION sh mqbroker  -c  ../conf/dledger/broker.conf
 
-# Servive unavailable when not ready
+# Service unavailable when not ready
 # sleep 20
 
 # Produce messages

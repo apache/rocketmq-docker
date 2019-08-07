@@ -35,12 +35,12 @@ How to config a 2m-2s-async cluster in Docker style.
 
 Note: You can skip this step if you use an existing nameserver cluster
 
-1. Confirm the host machine where the nameserver is to be deployed and copy the product directory into the host. Determine the directory (DATA_HOME) where the container persistences content (logs/storage) on the host,  as well as the RocketMQ image version (ROCKETMQ_VERSION)
+1. Confirm the host machine where the nameserver is to be deployed and copy the product directory into the host. Determine the directory (DATA_HOME) where the container persistences content (logs/storage) on the host,  as well as the RocketMQ image version (ROCKETMQ_VERSION) and base image alpine or centos (BASE_IMAGE)
 
 2. Run the script start-ns.sh, for example:
 
    ```
-   sh start-ns.sh /home/nameserver/data 4.5.0
+   sh start-ns.sh /home/nameserver/data 4.5.0 alpine
    ```
 
 3. Repeat above steps if there are multiple nameservers in the cluster.
@@ -49,14 +49,14 @@ Note: You can skip this step if you use an existing nameserver cluster
 
 1. Confirm the NameServer Cluster address. (fomart e.g. "ns1:9876;ns2:9876;...")
 
-2. Confirm the host machine where the broker-a master is to be deployed，determine the directory (DATA_HOME) where the container persistences content (logs/storage) on the host, e.g. DATA_HOME is set as /home/broker/data/;  then you need to copy the reference config file conf/2m-2s-async/broker-a.properties as /home/broker/data/conf/2m-2s-async/broker-a.properties in the  host.
+2. Confirm the host machine where the broker-a master is to be deployed，determine the directory (DATA_HOME) where the container persistence content (logs/storage) exists on the host, e.g. DATA_HOME is set as /home/broker/data/;  then you need to copy the reference config file conf/2m-2s-async/broker-a.properties as /home/broker/data/conf/2m-2s-async/broker-a.properties in the  host.
 
    Change file broker-a.properties and make the property 'brokerIP1' value as the dns-hostname(Precautions #3) of the host.
 
-3. Confirm the ROCKETMQ_VERSION (e.g. 4.5.0)， start broker with shell script start-broker.sh through  the following command:
+3. Confirm the ROCKETMQ_VERSION (e.g. 4.5.0), start broker with shell script start-broker.sh through the following command:
 
    ```
-   sh start-broker.sh /home/broker/data 4.5.0 "ns1:9876;ns2:9876" conf/2m-2s-async/broker-a.properties
+   sh start-broker.sh /home/broker/data 4.5.0 "ns1:9876;ns2:9876" conf/2m-2s-async/broker-a.properties alpine
    ```
 
 4. Check if the broker container is start up correctly (Note：The dir DATA_HOME in host needs to open read/write permissions  for the rocketmq user in the container, Precautions #1)
@@ -68,12 +68,12 @@ Note: You can skip this step if you use an existing nameserver cluster
 6. Confirm the ROCKETMQ_VERSION，start slave broker with shell script start-broker.sh:
 
    ```
-   sh start-broker.sh /home/broker/data 4.5.0 "ns1:9876;ns2:9876" conf/2m-2s-async/broker-a-s.properties
+   sh start-broker.sh /home/broker/data 4.5.0 "ns1:9876;ns2:9876" conf/2m-2s-async/broker-a-s.properties alpine
    ```
 
 7. Check if the broker container is start up correctly.
 
-8. Repeat above steps to create master and slave broker docker conatiners.
+8. Repeat above steps to create master and slave broker docker containers.
 
 ## Precautions
 

@@ -17,21 +17,39 @@
 
 
 ## Main
-if [ $# -lt 2 ]; then
-    echo "Usage: sh $0 DATA_HOME ROCKETMQ_VERSION"
+if [ $# -lt 3 ]; then
+    echo "Usage: sh $0 DATA_HOME ROCKETMQ_VERSION BASE_IMAGE"
     exit -1
 fi
 
 DATA_HOME=$1
 ROCKETMQ_VERSION=$2
+BASE_IMAGE=$3
 
 ## Show Env Setting
 echo "ENV Setting: "
 echo "DATA_HOME=${DATA_HOME} ROCKETMQ_VERSION=${ROCKETMQ_VERSION}"
 
 # Start nameserver
-docker run -d -v ${DATA_HOME}/logs:/home/rocketmq/logs \
-  --name rmqnamesrv \
-  -p 9876:9876 \
-  rocketmqinc/rocketmq:${ROCKETMQ_VERSION} \
-  sh mqnamesrv
+start_namesrv()
+{
+    TAG_SUFFIX=$1
+    docker run -d -v ${DATA_HOME}/logs:/home/rocketmq/logs \
+      --name rmqnamesrv \
+      -p 9876:9876 \
+      rocketmqinc/rocketmq:${ROCKETMQ_VERSION}${TAG_SUFFIX} \
+      sh mqnamesrv
+}
+
+case "${BASE_IMAGE}" in
+    alpine)
+        start_namesrv -alpine
+    ;;
+    centos)
+        start_namesrv
+    ;;
+    *)
+        echo "${BASE_IMAGE} is not supported, supported base images: centos, alpine"
+        exit -1
+    ;;
+esac
