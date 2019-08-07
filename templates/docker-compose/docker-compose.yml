@@ -19,7 +19,8 @@ services:
       - namesrv
     ports:
       - 10909:10909
-      - 10911:10911 
+      - 10911:10911
+      - 10912:10912
     environment:
       - NAMESRV_ADDR=namesrv:9876
     volumes:
@@ -31,12 +32,13 @@ services:
   #Service for another broker -- broker1
   broker1:
     image: rocketmqinc/rocketmq:ROCKETMQ_VERSION
-    container_name: rmqbroker1
+    container_name: rmqbroker-b
     links:
       - namesrv
     ports:
       - 10929:10909
-      - 10931:10911 
+      - 10931:10911
+      - 10932:10912
     environment:
       - NAMESRV_ADDR=namesrv:9876
     volumes:
