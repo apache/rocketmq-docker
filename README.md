@@ -22,10 +22,10 @@ Note: This is an experimented code to allow users to build docker image locally 
 
 ```
 cd image-build
-sh build-image.sh RMQ-VERSION
+sh build-image.sh RMQ-VERSION BASE-IMAGE
 ```
 
-Tip: The supported RMQ-VERSIONs can be obtained from [here](https://dist.apache.org/repos/dist/release/rocketmq/)
+> Tip: The supported RMQ-VERSIONs can be obtained from [here](https://dist.apache.org/repos/dist/release/rocketmq/). The supported BASE-IMAGEs are [centos, alpine]. For example: ```sh build-image.sh 4.5.0 alpine```
 
 ### B. Stage a specific version
 
@@ -44,7 +44,7 @@ Run:
 ```
 cd stages/4.5.0 
 
-./play-docker.sh
+./play-docker.sh alpine
 
 ```
 > NOTE:

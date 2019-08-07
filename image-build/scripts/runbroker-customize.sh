@@ -63,13 +63,13 @@ then
 	elif [ "$CAL_UNIT" == "K" -o "$CAL_UNIT" == "k" ]; then
 		MAX_POSSIBLE_RAM=$(echo ${MAX_POSSIBLE_RAM_STR:0:${#MAX_POSSIBLE_RAM_STR}-1} `expr 1 \* 1024` | awk '{printf "%d",$1*$2}')
 	fi
-	MAX_POSSIBLE_HEAP=$[MAX_POSSIBLE_RAM/4]
+	MAX_POSSIBLE_HEAP=`expr $MAX_POSSIBLE_RAM / 4`
 fi
 
 # Dynamically calculate parameters, for reference.
 Xms=$MAX_POSSIBLE_HEAP
 Xmx=$MAX_POSSIBLE_HEAP
-Xmn=$[MAX_POSSIBLE_HEAP/2]
+Xmn=`expr $MAX_POSSIBLE_HEAP / 2`
 MaxDirectMemorySize=$MAX_POSSIBLE_HEAP
 # Set for `JAVA_OPT`.
 JAVA_OPT="${JAVA_OPT} -server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn}"

@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-function checkVersion()        
+checkVersion()
 {
     echo "Stage version = $1"
 	echo $1 |grep -E "^[0-9]+\.[0-9]+\.[0-9]+" > /dev/null
@@ -50,9 +50,18 @@ cp -rf "$CURRENT_DIR/templates/" "$STAGE_DIR/$version"
 
 echo "staged templates into folder $STAGE_DIR/$version"
 
-# Stage the real version
-# todo fix on linux (sed)
-#find "$STAGE_DIR/$version" -type f -exec sed -i "" "s/ROCKETMQ_VERSION/${version}/g" {} \;
-find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
+# Replace ROCKETMQ_VERSION with real version string in all files under $STAGE_DIR/$version
+replace_version()
+{
+    case "`uname`" in
+        Darwin)
+            find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
+        ;;
+        *)
+            #sed -i "s/ROCKETMQ_VERSION/${version}/g"  `grep ROCKETMQ_VERSION -rl $STAGE_DIR/$version/template`
+            find "$STAGE_DIR/$version/template" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
+        ;;
+    esac
+}
 
-cd $STAGE_DIR
+replace_version
