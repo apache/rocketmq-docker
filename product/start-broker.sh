@@ -25,6 +25,7 @@ DATA_HOME=$1
 ROCKETMQ_VERSION=$2
 NAMESRV_ADDR=$3
 CONF_FILE=$4
+BASE_IMAGE=$5
 
 ## Show Env Setting
 echo "ENV Setting: "
@@ -40,10 +41,27 @@ fi
 
 
 # Start Broker
-docker run -d  -v ${DATA_HOME}/logs:/home/rocketmq/logs -v ${DATA_HOME}/store:/home/rocketmq/store \
-  -v ${DATA_HOME}/conf:/home/rocketmq/conf \
-  --name rmqbroker \
-  -e "NAMESRV_ADDR=${NAMESRV_ADDR}" \
-  -p 10911:10911 -p 10912:10912 -p 10909:10909 \
-  rocketmqinc/rocketmq:${ROCKETMQ_VERSION} \
-  sh mqbroker -c /home/rocketmq/conf/${CONF_FILE}
+start_broker()
+{
+    TAG_SUFFIX=$1
+    docker run -d  -v ${DATA_HOME}/logs:/home/rocketmq/logs -v ${DATA_HOME}/store:/home/rocketmq/store \
+      -v ${DATA_HOME}/conf:/home/rocketmq/conf \
+      --name rmqbroker \
+      -e "NAMESRV_ADDR=${NAMESRV_ADDR}" \
+      -p 10911:10911 -p 10912:10912 -p 10909:10909 \
+      rocketmqinc/rocketmq:${ROCKETMQ_VERSION}${TAG_SUFFIX} \
+      sh mqbroker -c /home/rocketmq/conf/${CONF_FILE}
+}
+
+case "${BASE_IMAGE}" in
+    alpine)
+        start_broker -alpine
+    ;;
+    centos)
+        start_broker
+    ;;
+    *)
+        echo "${BASE_IMAGE} is not supported, supported base images: centos, alpine"
+        exit -1
+    ;;
+esac

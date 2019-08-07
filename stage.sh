@@ -50,18 +50,5 @@ cp -rf "$CURRENT_DIR/templates/" "$STAGE_DIR/$version"
 
 echo "staged templates into folder $STAGE_DIR/$version"
 
-# Replace ROCKETMQ_VERSION with real version string in all files under $STAGE_DIR/$version
-replace_version()
-{
-    case "`uname`" in
-        Darwin)
-            find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
-        ;;
-        *)
-            #sed -i "s/ROCKETMQ_VERSION/${version}/g"  `grep ROCKETMQ_VERSION -rl $STAGE_DIR/$version/template`
-            find "$STAGE_DIR/$version/template" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
-        ;;
-    esac
-}
-
-replace_version
+# Replace string "ROCKETMQ_VERSION" with real version in all files under $STAGE_DIR/$version
+find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
