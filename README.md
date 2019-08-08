@@ -124,6 +124,7 @@ docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs
 Run:
 
 ```
+cd image-build
 ./update.sh 
 ```
 
