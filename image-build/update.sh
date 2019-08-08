@@ -27,11 +27,6 @@ checkVersion()
     exit -1
 }
 
-if [ $# -lt 1 ]; then
-    echo -e "Usage: sh $0 Repository"
-    exit -1
-fi
-
 set -eu;
 
 # Update the image of the latest released version
