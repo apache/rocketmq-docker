@@ -120,6 +120,16 @@ docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs
 
 ```
 
+### How to update RocketMQ image repository using update.sh
+Run:
+
+```
+cd image-build
+./update.sh 
+```
+
+This script will get the latest release version of RocketMQ and build the docker images based on ```alpine``` and ```centos``` respectively, then push the new images to the current official repository ```rocketmqinc/rocketmq```.
+
 ### How to verify RocketMQ works well
 
 #### Verify with Docker and docker-compose
@@ -231,6 +241,7 @@ services:
     ports:
       - 10909:10909
       - 10911:10911
+      - 10912:10912
     volumes:
       - ./data/broker/logs:/home/rocketmq/logs
       - ./data/broker/store:/home/rocketmq/store
