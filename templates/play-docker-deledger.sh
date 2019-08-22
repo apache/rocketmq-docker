@@ -35,6 +35,8 @@ if [ ! -d "`pwd`/data" ]; then
   mkdir -p "data"
 fi
 
+chmod 777 -R data
+
 echo "Starting RocketMQ nodes..."
 
 # Create network
