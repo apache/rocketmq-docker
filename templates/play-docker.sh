@@ -45,7 +45,7 @@ if [ ! -d "`pwd`/data" ]; then
   mkdir -p "data"
 fi
 
-chmod 777 -R data > /dev/null 2>&1
+chmod a+rw -R data
 
 echo "Starting RocketMQ nodes..."
 

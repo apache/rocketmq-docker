@@ -27,7 +27,7 @@ if [ ! -d "`pwd`/data" ]; then
   mkdir -p "data"
 fi
 
-chmod 777 -R docker-compose > /dev/null 2>&1
+chmod a+rw -R docker-compose
 
 # Run nameserver and broker
 docker-compose -f ./docker-compose/docker-compose.yml up -d
