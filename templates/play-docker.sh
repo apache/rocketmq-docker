@@ -19,7 +19,7 @@ start_namesrv_broker()
 {
     TAG_SUFFIX=$1
     # Start nameserver
-    docker run -d -v `pwd`/data/namesrv/logs:/home/rocketmq/logs -v `pwd`/data/namesrv/store:/home/rocketmq/store --name rmqnamesrv rocketmqinc/rocketmq:ROCKETMQ_VERSION${TAG_SUFFIX} sh mqnamesrv
+    docker run -d -v `pwd`/data/namesrv/logs:/home/rocketmq/logs --name rmqnamesrv rocketmqinc/rocketmq:ROCKETMQ_VERSION${TAG_SUFFIX} sh mqnamesrv
     # Start Broker
     docker run -d -v `pwd`/data/broker/logs:/home/rocketmq/logs -v `pwd`/data/broker/store:/home/rocketmq/store --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" rocketmqinc/rocketmq:ROCKETMQ_VERSION${TAG_SUFFIX} sh mqbroker
 }
@@ -41,11 +41,20 @@ if [[ -n "$RMQ_CONTAINER" ]]; then
    sleep 5
 fi
 
-if [ ! -d "`pwd`/data" ]; then
-  mkdir -p "data"
-fi
+prepare_dir()
+{
+    dirs=("data/namesrv/logs" "data/broker/logs" "data/broker/store")
 
-chmod a+rw -R data
+    for dir in ${dirs[@]}
+    do
+        if [ ! -d "`pwd`/${dir}" ]; then
+            mkdir -p "`pwd`/${dir}"
+            chmod a+rw "`pwd`/${dir}"
+        fi
+    done
+}
+
+prepare_dir
 
 echo "Starting RocketMQ nodes..."
 

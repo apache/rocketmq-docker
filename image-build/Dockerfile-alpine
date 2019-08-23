@@ -22,7 +22,7 @@ RUN apk add --no-cache bash gettext nmap-ncat openssl busybox-extras
 ARG user=rocketmq
 ARG group=rocketmq
 ARG uid=3000
-ARG gid=3000
+ARG gid=999
 
 # RocketMQ is run with user `rocketmq`, uid = 3000
 # If you bind mount a volume from the host or a data container,

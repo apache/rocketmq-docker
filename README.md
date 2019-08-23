@@ -102,24 +102,6 @@ cd stages/4.5.0
 ./play-consumer.sh
 ```
 
-
-
-### To use specified heap size for JVM
-
-1. Use the environment variable MAX_POSSIBLE_HEAP to specify the max heap which JVM could use. Meanwhile, the max direct memory is the same size as MAX_POSSIBLE_HEAP.
-
-2. To verify the usage:
-
-Run:
-
-```
-
-docker run -d -p 9876:9876 -v `pwd`/data/namesrv/logs:/root/logs -v `pwd`/data/namesrv/store:/root/store --name rmqnamesrv -e "MAX_POSSIBLE_HEAP=100000000" rocketmqinc/rocketmq:4.4.0 sh mqnamesrv
-
-docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs -v `pwd`/data/broker/store:/root/store --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" -e "MAX_POSSIBLE_HEAP=200000000" rocketmqinc/rocketmq:4.4.0 sh mqbroker
-
-```
-
 ### How to update RocketMQ image repository using update.sh
 Run:
 
@@ -233,7 +215,6 @@ services:
       - 9876:9876
     volumes:
       - ./data/namesrv/logs:/home/rocketmq/logs
-      - ./data/namesrv/store:/home/rocketmq/store
     command: sh mqnamesrv
   broker:
     image: rocketmqinc/rocketmq:4.4.0

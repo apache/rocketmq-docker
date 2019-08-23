@@ -23,11 +23,20 @@ if [[ -n "$RMQ_CONTAINER" ]]; then
    sleep 5
 fi
 
-if [ ! -d "`pwd`/data" ]; then
-  mkdir -p "data"
-fi
+prepare_dir()
+{
+    dirs=("docker-compose/data/namesrv/logs" "docker-compose/data/broker/logs" "docker-compose/data/broker/store" "docker-compose/data1/broker/logs" "docker-compose/data1/broker/store")
 
-chmod a+rw -R docker-compose
+    for dir in ${dirs[@]}
+    do
+        if [ ! -d "`pwd`/${dir}" ]; then
+            mkdir -p "`pwd`/${dir}"
+            chmod a+rw "`pwd`/${dir}"
+        fi
+    done
+}
+
+prepare_dir
 
 # Run nameserver and broker
 docker-compose -f ./docker-compose/docker-compose.yml up -d

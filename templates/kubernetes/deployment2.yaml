@@ -24,8 +24,6 @@ spec:
         volumeMounts:
           - mountPath: /home/rocketmq/logs
             name: namesrvlogs
-          - mountPath: /home/rocketmq/store
-            name: namesrvstore
       volumes:
       - name: namesrvlogs
         emptyDir: {}

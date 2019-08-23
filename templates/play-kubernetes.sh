@@ -19,7 +19,5 @@ if [ ! -d "`pwd`/data" ]; then
   mkdir -p "data"
 fi
 
-chmod a+rw -R data
-
 # Run nameserver and broker on your Kubernetes cluster
 kubectl apply -f kubernetes/deployment.yaml

@@ -31,8 +31,6 @@ spec:
         volumeMounts:
           - mountPath: /home/rocketmq/logs
             name: namesrvoptlogs
-          - mountPath: /home/rocketmq/store
-            name: namesrvoptstore
       volumes:
       - name: brokeroptlogs
         hostPath:
