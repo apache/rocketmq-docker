@@ -8,7 +8,6 @@ services:
       - 9876:9876
     volumes:
       - ./data/namesrv/logs:/home/rocketmq/logs
-      - ./data/namesrv/store:/home/rocketmq/store
     command: sh mqnamesrv
 
   #Service for broker
