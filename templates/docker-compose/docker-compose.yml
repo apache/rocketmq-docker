@@ -45,3 +45,13 @@ services:
       - ./data1/broker/store:/home/rocketmq/store
       - ./data1/broker/conf/broker.conf:/opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
     command: sh mqbroker -c ../conf/broker.conf
+
+  # add console
+  console:
+    image: styletang/rocketmq-console-ng:latest
+    ports:
+     - "19876:8080"
+    links:
+     - namesrv:namesrv
+    environment:
+     JAVA_OPTS: -Drocketmq.config.namesrvAddr=namesrv:9876
