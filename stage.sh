@@ -38,6 +38,7 @@ if [ $# -lt 1 ]; then
 fi
 
 version=$1
+BASE_IMAGE=$2
 checkVersion $version
 if [ $? = 0 ]; then
 	exit -1
@@ -51,4 +52,16 @@ cp -rf "$CURRENT_DIR/templates/" "$STAGE_DIR/$version"
 echo "staged templates into folder $STAGE_DIR/$version"
 
 # Replace string "ROCKETMQ_VERSION" with real version in all files under $STAGE_DIR/$version
-find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
+# Build rocketmq
+case "${BASE_IMAGE}" in
+    alpine)
+        find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}-alpine/g"
+    ;;
+    centos)
+        find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
+    ;;
+    *)
+        echo "${BASE_IMAGE} is not supported, supported base images: centos, alpine"
+        exit -1
+    ;;
+esac
