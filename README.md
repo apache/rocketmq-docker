@@ -182,7 +182,7 @@ Then we can modify the `play-docker.sh` and volume this file to the broker conta
 
 ```
 docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs -v `pwd`/data/broker/store:/root/store -v `pwd`/data/broker/conf/broker.conf:/opt/rocketmq-4.4.0/conf/broker.conf --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" apacherocketmq/rocketmq:4.4
-.0 sh mqbroker -c /opt/rocketmq-4.4.0/conf/broker.conf
+.0 sh mqbroker -c /home/rocketmq/rocketmq-4.4.0/conf/broker.conf
 
 ```
 
@@ -191,7 +191,7 @@ Finally we can find the customized `broker.conf` has been used in the broker con
 ```
 huandeMacBook-Pro:4.4.0 huan$ docker ps |grep mqbroker
 a32c67aed6dd        apacherocketmq/rocketmq:4.4.0   "sh mqbroker"       20 minutes ago      Up 20 minutes       0.0.0.0:10909->10909/tcp, 9876/tcp, 0.0.0.0:10911->10911/tcp   rmqbroker
-huandeMacBook-Pro:4.4.0 huan$ docker exec -it a32c67aed6dd cat /opt/rocketmq-4.4.0/conf/broker.conf
+huandeMacBook-Pro:4.4.0 huan$ docker exec -it a32c67aed6dd cat /home/rocketmq/rocketmq-4.4.0/conf/broker.conf
 brokerClusterName = DefaultCluster
 brokerName = broker-a
 brokerId = 0
@@ -226,7 +226,7 @@ services:
     volumes:
       - ./data/broker/logs:/home/rocketmq/logs
       - ./data/broker/store:/home/rocketmq/store
-      - ./data/broker/conf/broker.conf:/opt/rocketmq-4.4.0/conf/broker.conf
+      - ./data/broker/conf/broker.conf:/home/rocketmq/rocketmq-4.4.0/conf/broker.conf
     #command: sh mqbroker -n namesrv:9876
     command: sh mqbroker -n namesrv:9876 -c ../conf/broker.conf
     depends_on:
