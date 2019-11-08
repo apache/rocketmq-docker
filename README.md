@@ -110,7 +110,7 @@ cd image-build
 ./update.sh 
 ```
 
-This script will get the latest release version of RocketMQ and build the docker images based on ```alpine``` and ```centos``` respectively, then push the new images to the current official repository ```rocketmqinc/rocketmq```.
+This script will get the latest release version of RocketMQ and build the docker images based on ```alpine``` and ```centos``` respectively, then push the new images to the current official repository ```apacherocketmq/rocketmq```.
 
 ### How to verify RocketMQ works well
 
@@ -181,7 +181,7 @@ And put the customized `broker.conf` file at a specific path, like "`pwd`/data/b
 Then we can modify the `play-docker.sh` and volume this file to the broker container when it starts. For example: 
 
 ```
-docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs -v `pwd`/data/broker/store:/root/store -v `pwd`/data/broker/conf/broker.conf:/opt/rocketmq-4.4.0/conf/broker.conf --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" rocketmqinc/rocketmq:4.4
+docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs -v `pwd`/data/broker/store:/root/store -v `pwd`/data/broker/conf/broker.conf:/opt/rocketmq-4.4.0/conf/broker.conf --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" apacherocketmq/rocketmq:4.4
 .0 sh mqbroker -c /home/rocketmq/rocketmq-4.4.0/conf/broker.conf
 
 ```
@@ -190,7 +190,7 @@ Finally we can find the customized `broker.conf` has been used in the broker con
 
 ```
 huandeMacBook-Pro:4.4.0 huan$ docker ps |grep mqbroker
-a32c67aed6dd        rocketmqinc/rocketmq:4.4.0   "sh mqbroker"       20 minutes ago      Up 20 minutes       0.0.0.0:10909->10909/tcp, 9876/tcp, 0.0.0.0:10911->10911/tcp   rmqbroker
+a32c67aed6dd        apacherocketmq/rocketmq:4.4.0   "sh mqbroker"       20 minutes ago      Up 20 minutes       0.0.0.0:10909->10909/tcp, 9876/tcp, 0.0.0.0:10911->10911/tcp   rmqbroker
 huandeMacBook-Pro:4.4.0 huan$ docker exec -it a32c67aed6dd cat /home/rocketmq/rocketmq-4.4.0/conf/broker.conf
 brokerClusterName = DefaultCluster
 brokerName = broker-a
@@ -209,7 +209,7 @@ In the case of docker-compose, change the docker-compose.yml like following:
 version: '2'
 services:
   namesrv:
-    image: rocketmqinc/rocketmq:4.4.0
+    image: apacherocketmq/rocketmq:4.4.0
     container_name: rmqnamesrv
     ports:
       - 9876:9876
@@ -217,7 +217,7 @@ services:
       - ./data/namesrv/logs:/home/rocketmq/logs
     command: sh mqnamesrv
   broker:
-    image: rocketmqinc/rocketmq:4.4.0
+    image: apacherocketmq/rocketmq:4.4.0
     container_name: rmqbroker
     ports:
       - 10909:10909
