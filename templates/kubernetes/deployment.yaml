@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: broker
-        image: rocketmqinc/rocketmq:ROCKETMQ_VERSION
+        image: apacherocketmq/rocketmq:ROCKETMQ_VERSION
         command: ["sh","mqbroker", "-n","localhost:9876"]
         imagePullPolicy: IfNotPresent
         ports:
@@ -23,7 +23,7 @@ spec:
           - mountPath: /home/rocketmq/store
             name: brokeroptstore
       - name: namesrv
-        image: rocketmqinc/rocketmq:ROCKETMQ_VERSION
+        image: apacherocketmq/rocketmq:ROCKETMQ_VERSION
         command: ["sh","mqnamesrv"]
         imagePullPolicy: IfNotPresent
         ports:
