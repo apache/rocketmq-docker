@@ -75,14 +75,14 @@ cd stages/4.5.0
 
 ```
 
-#### 4. Cluster of Deledger storage 
+#### 4. Cluster of Dledger storage 
 
 Run: (Note: This feature needs RMQ version is 4.4.0 or above)
 
 ```
 cd stages/4.5.0 
 
-./play-docker-deledger.sh
+./play-docker-dledger.sh
 
 ```
 
