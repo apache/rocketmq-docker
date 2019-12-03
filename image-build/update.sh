@@ -23,14 +23,15 @@ checkVersion()
         return 0
     fi
 
-	echo "Version $1 illegal, it should be X.X.X format(e.g. 4.5.0), please check released versions in 'https://dist.apache.org/repos/dist/release/rocketmq/'"
+	echo "Version $1 illegal, it should be X.X.X format(e.g. 4.5.0), please check released versions in 'https://archive.apache.org/dist/rocketmq/'"
     exit -1
 }
 
 set -eu;
 
 # Update the image of the latest released version
-LATEST_VERSION=$(curl -s https://dist.apache.org/repos/dist/release/rocketmq/ | grep -B1 "KEYS" | grep -v "KEYS" | awk -F '>' '{print $3}' | awk -F '/' '{print $1}')
+# LATEST_VERSION=$(curl -s https://archive.apache.org/dist/rocketmq/ | grep -B1 "KEYS" | grep -v "KEYS" | awk -F '>' '{print $3}' | awk -F '/' '{print $1}')
+LATEST_VERSION=$(curl -s https://archive.apache.org/dist/rocketmq/ | grep -B8 "KEYS" | grep -v "KEY" | grep -v "rocketmq" | tail -1 | awk -F '>' '{print $3}' | awk -F '/' '{print $1}')
 
 checkVersion ${LATEST_VERSION}
 
