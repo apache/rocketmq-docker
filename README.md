@@ -25,7 +25,7 @@ cd image-build
 sh build-image.sh RMQ-VERSION BASE-IMAGE
 ```
 
-> Tip: The supported RMQ-VERSIONs can be obtained from [here](https://dist.apache.org/repos/dist/release/rocketmq/). The supported BASE-IMAGEs are [centos, alpine]. For example: ```sh build-image.sh 4.5.0 alpine```
+> Tip: The supported RMQ-VERSIONs can be obtained from [here](https://archive.apache.org/dist/rocketmq/). The supported BASE-IMAGEs are [centos, alpine]. For example: ```sh build-image.sh 4.5.0 alpine```
 
 ### B. Stage a specific version
 
