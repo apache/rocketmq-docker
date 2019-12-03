@@ -30,8 +30,7 @@ checkVersion()
 set -eu;
 
 # Update the image of the latest released version
-# LATEST_VERSION=$(curl -s https://archive.apache.org/dist/rocketmq/ | grep -B1 "KEYS" | grep -v "KEYS" | awk -F '>' '{print $3}' | awk -F '/' '{print $1}')
-LATEST_VERSION=$(curl -s https://archive.apache.org/dist/rocketmq/ | grep -B8 "KEYS" | grep -v "KEY" | grep -v "rocketmq" | tail -1 | awk -F '>' '{print $3}' | awk -F '/' '{print $1}')
+LATEST_VERSION=$(curl -s https://archive.apache.org/dist/rocketmq/ | awk -F '>' '{print $3}' | awk -F '/' '{print $1}' | grep '^[0-9]' | sort | tail -1)
 
 checkVersion ${LATEST_VERSION}
 
