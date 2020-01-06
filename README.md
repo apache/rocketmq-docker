@@ -35,6 +35,7 @@ Users can generate a runtime (stage) directory based on a specific version and d
 sh stage.sh RMQ-VERSION
 ```
 
+> Note: RMQ-VERSION is the tag of the RocketMQ image. 
 After executing the above shell script, (e.g.  sh stage.sh 4.5.0), it will generate a stage directory (./stages/4.5.0).  User can do the following works under the directory, assuming the RMQ-version is defined with 4.5.0.
 
 #### 1. Single Node
