@@ -131,7 +131,7 @@ Xmn=$HEAP_NEWSIZE
 MaxDirectMemorySize=$MAX_HEAP_SIZE
 # Set for `JAVA_OPT`.
 #JAVA_OPT="${JAVA_OPT} -server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn}"
-JAVA_OPT="${JAVA_OPT} -server -Xms256m -Xmx1g -Xmn256m"
+JAVA_OPT="${JAVA_OPT} -server -Xms256m -Xmx8g -Xmn256m"
 JAVA_OPT="${JAVA_OPT} -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0 -XX:SurvivorRatio=8"
 JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:/dev/shm/mq_gc_%p.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintAdaptiveSizePolicy"
 JAVA_OPT="${JAVA_OPT} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=30m"
