@@ -25,8 +25,8 @@ services:
     volumes:
       - ./data/broker/logs:/home/rocketmq/logs
       - ./data/broker/store:/home/rocketmq/store
-      - ./data/broker/conf/broker.conf:/home/rocketmq/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
-    command: sh mqbroker -c ../conf/broker.conf
+      - ./data/broker/conf/broker.conf:/opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
+    command: sh mqbroker -c /opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
 
   #Service for another broker -- broker1
   broker1:
@@ -43,5 +43,5 @@ services:
     volumes:
       - ./data1/broker/logs:/home/rocketmq/logs
       - ./data1/broker/store:/home/rocketmq/store
-      - ./data1/broker/conf/broker.conf:/home/rocketmq/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
-    command: sh mqbroker -c ../conf/broker.conf
+      - ./data1/broker/conf/broker.conf:/opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
+    command: sh mqbroker -c /opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
