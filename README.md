@@ -1,4 +1,9 @@
-# RocketMQ-Docker [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+# RocketMQ-Docker 
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/apache/rocketmq-docker.svg)](http://isitmaintained.com/project/apache/rocketmq-docker "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/apache/rocketmq-docker.svg)](http://isitmaintained.com/project/apache/rocketmq-docker "Percentage of issues still open")
+![Twitter Follow](https://img.shields.io/twitter/follow/ApacheRocketMQ?style=social)
+
 
 This is the Git repo of the Docker Image for Apache RocketMQ. You could run it through the following ways: 
 
@@ -25,7 +30,7 @@ cd image-build
 sh build-image.sh RMQ-VERSION BASE-IMAGE
 ```
 
-> Tip: The supported RMQ-VERSIONs can be obtained from [here](https://dist.apache.org/repos/dist/release/rocketmq/). The supported BASE-IMAGEs are [centos, alpine]. For example: ```sh build-image.sh 4.5.0 alpine```
+> Tip: The supported RMQ-VERSIONs can be obtained from [here](https://archive.apache.org/dist/rocketmq/). The supported BASE-IMAGEs are [centos, alpine]. For example: ```sh build-image.sh 4.5.0 alpine```
 
 ### B. Stage a specific version
 
@@ -35,6 +40,7 @@ Users can generate a runtime (stage) directory based on a specific version and d
 sh stage.sh RMQ-VERSION
 ```
 
+> Note: RMQ-VERSION is the tag of the RocketMQ image. 
 After executing the above shell script, (e.g.  sh stage.sh 4.5.0), it will generate a stage directory (./stages/4.5.0).  User can do the following works under the directory, assuming the RMQ-version is defined with 4.5.0.
 
 #### 1. Single Node
