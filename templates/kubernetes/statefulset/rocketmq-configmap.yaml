@@ -1,0 +1,57 @@
+# RocketMQ run.sh for Kubernetes
+# 
+# Created by Lin.Ru@DaoCloud.io, 2020-05-20
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rocketmq-run
+  labels:
+    app: rocketmq-broker
+data:
+  run.sh: |
+    #! /bin/sh
+
+    # RocketMQ run.sh for Kubernetes
+    # 
+    # Created by Lin.Ru@DaoCloud.io, 2020-05-20
+
+    config=$ROCKETMQ_HOME/conf/broker.properties
+
+    GenProperties(){
+        host_id=${HOSTNAME##*-}
+        result=$(( $host_id % 2 ))
+
+        case $result in
+            0)  # MASTER
+                # Set brokerRole for '2m-2s-async' & '2m-noslave' default to 'ASYNC_MASTER'
+                test "$RMQ_RUN_MODE" = "2m-2s-sync" && RMQ_BROKER_ROLE="SYNC_MASTER"
+                RMQ_BROKER_NAME=broker-$host_id
+                ;;
+            1)  # SLAVE
+                RMQ_BROKER_ROLE=SLAVE
+                RMQ_BROKER_NAME=broker-$(($host_id - 1))
+                ;;
+        esac
+
+        RMQ_BROKER_ID=$host_id
+
+        echo "Generate Broker Properties"
+        {
+            echo "brokerClusterName=${RMQ_CLUSTER_NAME:-DefaultCluster}"
+            echo "brokerName=${RMQ_BROKER_NAME:-broker-a}"
+            echo "brokerId=${RMQ_BROKER_ID:-0}"
+            echo "deleteWhen=${RMQ_DELETE_WHEN:-40}"
+            echo "fileReservedTime=${RMQ_FILE_REV_TIME:-48}"
+            echo "brokerRole=${RMQ_BROKER_ROLE:-ASYNC_MASTER}"
+            echo "flushDiskType=${RMQ_FLUSH_DISKTYPE:-ASYNC_FLUSH}"
+            echo "storePathRootDir=/data/rocketmq/store"
+        } > $config
+    }
+
+    # Generate Config
+    GenProperties
+
+    # Startup
+    echo "Start Broker with id $RMQ_BROKER_ID"
+    sh mqbroker -n $RMQ_NAMESERVERS -c $config
