@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,8 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-checkVersion()
-{
+checkVersion() {
     echo "Version = $1"
 	echo $1 |grep -E "^[0-9]+\.[0-9]+\.[0-9]+" > /dev/null
     if [ $? = 0 ]; then
