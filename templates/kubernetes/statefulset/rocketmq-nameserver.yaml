@@ -1,0 +1,74 @@
+# RocketMQ run.sh for Kubernetes
+# 
+# Created by Lin.Ru@DaoCloud.io, 2020-05-20
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rocketmq-ns-svc
+  labels:
+    app: rocketmq-ns-svc
+    service: rocketmq
+spec:
+  ports:
+  - port: 9876
+    name: server
+  clusterIP: None
+  selector:
+    app: rocketmq-ns
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rocketmq-ns
+spec:
+  serviceName: rocketmq-ns-svc
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rocketmq-ns
+  template:
+    metadata:
+      labels:
+        app: rocketmq-ns
+        service: rocketmq
+    spec:
+      containers:
+      - name: rocketmq
+        image: apacherocketmq/rocketmq:4.4.0-alpine
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        - -c
+        - mqnamesrv
+        env:
+        - name:  RMQ_MIN_HEAP_SIZE
+          value: 256M
+        - name:  RMQ_MAX_HEAP_SIZE
+          value: 256M
+        - name:  RMQ_NEW_HEAP_SIZE
+          value: 256M
+        securityContext:
+          runAsUser: 3000
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 200m
+          limits:
+            memory: 512Mi
+            cpu: 200m
+        ports:
+        - containerPort: 9876
+          name: server
+        livenessProbe:
+          tcpSocket:
+            port: 9876
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 9876
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 20

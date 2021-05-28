@@ -72,6 +72,7 @@ cd stages/4.5.0
 
 #### 3. Cluster on Kubernetes
 
+##### Deployment
 Run:
 
 ```
@@ -79,6 +80,14 @@ cd stages/4.5.0
 
 ./play-kubernetes.sh
 
+```
+
+##### StatefulSet
+Run:
+
+```
+cd templates
+./play-kubernetes-statefulset.sh
 ```
 
 #### 4. Cluster of Dledger storage 

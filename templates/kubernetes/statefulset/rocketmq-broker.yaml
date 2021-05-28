@@ -1,0 +1,116 @@
+# RocketMQ run.sh for Kubernetes
+# 
+# Created by Lin.Ru@DaoCloud.io, 2020-05-20
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rocketmq-broker-svc
+  labels:
+    app: rocketmq-broker-svc
+    service: rocketmq
+spec:
+  ports:
+  - port: 10909
+    name: vipchannel
+  - port: 10911
+    name: server
+  - port: 10912
+    name: ha
+  clusterIP: None
+  selector:
+    app: rocketmq-broker
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rocketmq-broker
+spec:
+  serviceName: rocketmq-broker-svc
+  replicas: 4
+  selector:
+    matchLabels:
+      app: rocketmq-broker
+  template:
+    metadata:
+      labels:
+        app: rocketmq-broker
+        service: rocketmq
+    spec:
+      initContainers:
+      - name: init-dir
+        image: busybox
+        command:
+        - /bin/sh
+        - -c
+        - mkdir -p /data/rocketmq/store && chown -v 3000. /data/rocketmq/store
+        volumeMounts:
+        - name: store
+          mountPath: /data/rocketmq
+      containers:
+      - name: rocketmq
+        image: apacherocketmq/rocketmq:4.4.0-alpine
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        - -c
+        - /run.sh
+        env:
+        - name:  JVM_MIN_HEAP_SIZE
+          value: 512M
+        - name:  JVM_MAX_HEAP_SIZE
+          value: 512M
+        - name:  JVM_NEW_HEAP_SIZE
+          value: 256M
+        - name:  RMQ_RUN_MODE
+          value: 2m-2s-sync
+        - name:  RMQ_NAMESERVERS
+          value: rocketmq-ns-0.rocketmq-ns-svc:9876;rocketmq-ns-1.rocketmq-ns-svc:9876;rocketmq-ns-2.rocketmq-ns-svc:9876
+        securityContext:
+          runAsUser: 3000
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 300m
+          limits:
+            memory: 1Gi
+            cpu: 300m
+        ports:
+        - containerPort: 10909
+          name: vipchannel
+        - containerPort: 10911
+          name: server
+        - containerPort: 10912
+          name: ha
+        livenessProbe:
+          tcpSocket:
+            port: 10911
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 10911
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 20
+        volumeMounts:
+        - name: store
+          mountPath: /data/rocketmq
+        - name: runsh
+          mountPath: /run.sh
+          subPath: run.sh
+      volumes:
+      - name: runsh
+        configMap:
+          defaultMode: 0755
+          name: rocketmq-run
+  volumeClaimTemplates:
+  - metadata:
+      name: store
+    spec:
+      storageClassName: data
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 50Gi
