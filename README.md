@@ -113,9 +113,9 @@ cd stages/4.5.0
 ## 4. Generate a RocketMQ Dashboard Docker image
 - 4.1 build command
 ```
-sh image-build/build-image-dashboard.sh `VERSION` centos
+cd image-build && sh build-image-dashboard.sh `VERSION` centos
 
-demo: sh image-build/build-image-dashboard.sh 1.0.0 centos
+demo: sh build-image-dashboard.sh 1.0.0 centos
 ```
 
 - 4.2 start command
