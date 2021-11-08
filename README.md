@@ -9,10 +9,12 @@ This is the Git repo of the Docker Image for Apache RocketMQ. You could run it t
 
 1. Generate a RocketMQ Docker image
 2. Run the docker image with the below modes:
-   1. Single Node.
-   2. Cluster with docker-compose.
-   3. Cluster on Kubernetes.
-
+   2.1. Single Node.
+   2.2. Cluster with docker-compose.
+   2.3. Cluster on Kubernetes.
+   2.4. Cluster of Dledger storage
+3. TLS support
+4. Generate a RocketMQ Dashboard Docker image
 
 ## Prerequisites
 
@@ -43,7 +45,7 @@ sh stage.sh RMQ-VERSION
 > Note: RMQ-VERSION is the tag of the RocketMQ image. 
 After executing the above shell script, (e.g.  sh stage.sh 4.5.0), it will generate a stage directory (./stages/4.5.0).  User can do the following works under the directory, assuming the RMQ-version is defined with 4.5.0.
 
-#### 1. Single Node
+#### 2.1 Single Node
 
 Run: 
 
@@ -58,7 +60,7 @@ Some Linux Systems (e.g. Ubuntu) may generate path
 ```stages/4.5.0/template```, please adjust the command accordingly.
 
 
-#### 2. Cluster with docker-compose
+#### 2.2 Cluster with docker-compose
 
 Run:
 
@@ -70,7 +72,7 @@ cd stages/4.5.0
 ```
 
 
-#### 3. Cluster on Kubernetes
+#### 2.3 Cluster on Kubernetes
 
 Run:
 
@@ -81,7 +83,7 @@ cd stages/4.5.0
 
 ```
 
-#### 4. Cluster of Dledger storage 
+#### 2.4 Cluster of Dledger storage 
 
 Run: (Note: This feature needs RMQ version is 4.4.0 or above)
 
@@ -92,7 +94,7 @@ cd stages/4.5.0
 
 ```
 
-## 5. TLS support 
+## 3. TLS support 
 
 Run:  (It will startup nameserver and broker with SSL enabled style. The client will not invoke nameserver or broker until related SSL client is configurated. ) 
 
@@ -107,6 +109,22 @@ cd stages/4.5.0
 ./play-producer.sh
 ./play-consumer.sh
 ```
+
+## 4. Generate a RocketMQ Dashboard Docker image
+- 4.1 build command
+```
+cd image-build && sh build-image-dashboard.sh `VERSION` centos
+
+demo: sh build-image-dashboard.sh 1.0.0 centos
+```
+
+- 4.2 start command
+```
+sh product/start-dashboard.sh `VERSION`
+
+demo: sh product/start-dashboard.sh 1.0.0
+```
+
 
 ### How to update RocketMQ image repository using update.sh
 Run:
