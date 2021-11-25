@@ -51,8 +51,8 @@ RUN set -eux; \
 	gpg --import KEYS; \
     gpg --batch --verify rocketmq.zip.asc rocketmq.zip; \
     unzip rocketmq.zip; \
-	mv rocketmq-all*/* . ; \
-	rmdir rocketmq-all* ; \
+	mv rocketmq*/* . ; \
+	rmdir rocketmq-* ; \
 	rm rocketmq.zip rocketmq.zip.asc KEYS; \
 	apk del .build-deps ; \
     rm -rf /var/cache/apk/* ; \
