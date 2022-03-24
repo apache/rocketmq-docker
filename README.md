@@ -5,7 +5,8 @@
 ![Twitter Follow](https://img.shields.io/twitter/follow/ApacheRocketMQ?style=social)
 
 
-This is the Git repo of the Docker Image for Apache RocketMQ. You could run it through the following ways: 
+This is the Git repo of the Docker Image for Apache RocketMQ and official docker hub repo: https://hub.docker.com/repository/docker/apache/rocketmq
+. You could run it through the following ways: 
 
 1. Generate a RocketMQ Docker image
 2. Run the docker image with the below modes:
