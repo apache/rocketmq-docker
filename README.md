@@ -4,9 +4,9 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/apache/rocketmq-docker.svg)](http://isitmaintained.com/project/apache/rocketmq-docker "Percentage of issues still open")
 ![Docker Automated](https://img.shields.io/docker/automated/apacherocketmq/rocketmq)
 [![Docker Pulls](https://img.shields.io/docker/pulls/apacherocketmq/rocketmq-broker)](https://hub.docker.com/repository/docker/apache/rocketmq)
+[![Docker TAG](https://img.shields.io/docker/v/apache/rocketmq?label=tags&sort=date)](https://hub.docker.com/r/apache/rocketmq/tags)
 ![Docker Iamge](https://img.shields.io/docker/image-size/apacherocketmq/rocketmq)
 ![Twitter Follow](https://img.shields.io/twitter/follow/ApacheRocketMQ?style=social)
-
 
 This is the Git repo of the Docker Image for Apache RocketMQ and official docker hub repo: https://hub.docker.com/repository/docker/apache/rocketmq
 . You could run it through the following ways: 
