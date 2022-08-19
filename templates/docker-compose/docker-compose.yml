@@ -2,7 +2,7 @@ version: '2'
 services:
   #Service for nameserver
   namesrv:
-    image: apacherocketmq/rocketmq:ROCKETMQ_VERSION
+    image: apache/rocketmq:ROCKETMQ_VERSION
     container_name: rmqnamesrv
     ports:
       - 9876:9876
@@ -12,7 +12,7 @@ services:
 
   #Service for broker
   broker:
-    image: apacherocketmq/rocketmq:ROCKETMQ_VERSION
+    image: apache/rocketmq:ROCKETMQ_VERSION
     container_name: rmqbroker
     links:
       - namesrv
@@ -30,7 +30,7 @@ services:
 
   #Service for another broker -- broker1
   broker1:
-    image: apacherocketmq/rocketmq:ROCKETMQ_VERSION
+    image: apache/rocketmq:ROCKETMQ_VERSION
     container_name: rmqbroker-b
     links:
       - namesrv

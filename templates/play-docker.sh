@@ -19,9 +19,9 @@ start_namesrv_broker()
 {
     TAG_SUFFIX=$1
     # Start nameserver
-    docker run -d -v `pwd`/data/namesrv/logs:/home/rocketmq/logs --name rmqnamesrv -p 9876:9876 apacherocketmq/rocketmq:ROCKETMQ_VERSION${TAG_SUFFIX} sh mqnamesrv
+    docker run -d -v `pwd`/data/namesrv/logs:/home/rocketmq/logs --name rmqnamesrv -p 9876:9876 apache/rocketmq:ROCKETMQ_VERSION${TAG_SUFFIX} sh mqnamesrv
     # Start Broker
-    docker run -d -v `pwd`/data/broker/logs:/home/rocketmq/logs -v `pwd`/data/broker/store:/home/rocketmq/store --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" -p 10909:10909 -p 10911:10911 -p 10912:10912 apacherocketmq/rocketmq:ROCKETMQ_VERSION${TAG_SUFFIX} sh mqbroker
+    docker run -d -v `pwd`/data/broker/logs:/home/rocketmq/logs -v `pwd`/data/broker/store:/home/rocketmq/store --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" -p 10909:10909 -p 10911:10911 -p 10912:10912 apache/rocketmq:ROCKETMQ_VERSION${TAG_SUFFIX} sh mqbroker
 }
 
 if [ $# -lt 1 ]; then
