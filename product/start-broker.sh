@@ -49,7 +49,7 @@ start_broker()
       --name rmqbroker \
       -e "NAMESRV_ADDR=${NAMESRV_ADDR}" \
       -p 10911:10911 -p 10912:10912 -p 10909:10909 \
-      apacherocketmq/rocketmq:${ROCKETMQ_VERSION}${TAG_SUFFIX} \
+      apache/rocketmq:${ROCKETMQ_VERSION}${TAG_SUFFIX} \
       sh mqbroker -c /home/rocketmq/conf/${CONF_FILE}
 }
 

@@ -2,10 +2,10 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/apache/rocketmq-docker.svg)](http://isitmaintained.com/project/apache/rocketmq-docker "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/apache/rocketmq-docker.svg)](http://isitmaintained.com/project/apache/rocketmq-docker "Percentage of issues still open")
-![Docker Automated](https://img.shields.io/docker/automated/apacherocketmq/rocketmq)
-[![Docker Pulls](https://img.shields.io/docker/pulls/apacherocketmq/rocketmq-broker)](https://hub.docker.com/repository/docker/apache/rocketmq)
+![Docker Automated](https://img.shields.io/docker/automated/apache/rocketmq)
+[![Docker Pulls](https://img.shields.io/docker/pulls/apache/rocketmq-broker)](https://hub.docker.com/repository/docker/apache/rocketmq)
 [![Docker TAG](https://img.shields.io/docker/v/apache/rocketmq?label=tags&sort=date)](https://hub.docker.com/r/apache/rocketmq/tags)
-![Docker Iamge](https://img.shields.io/docker/image-size/apacherocketmq/rocketmq)
+![Docker Iamge](https://img.shields.io/docker/image-size/apache/rocketmq)
 ![Twitter Follow](https://img.shields.io/twitter/follow/ApacheRocketMQ?style=social)
 
 This is the Git repo of the Docker Image for Apache RocketMQ and official docker hub repo: https://hub.docker.com/repository/docker/apache/rocketmq
@@ -138,7 +138,7 @@ cd image-build
 ./update.sh 
 ```
 
-This script will get the latest release version of RocketMQ and build the docker images based on ```alpine``` and ```centos``` respectively, then push the new images to the current official repository ```apacherocketmq/rocketmq```.
+This script will get the latest release version of RocketMQ and build the docker images based on ```alpine``` and ```centos``` respectively, then push the new images to the current official repository ```apache/rocketmq```.
 
 ### How to verify RocketMQ works well
 
@@ -209,7 +209,7 @@ And put the customized `broker.conf` file at a specific path, like "`pwd`/data/b
 Then we can modify the `play-docker.sh` and volume this file to the broker container when it starts. For example: 
 
 ```
-docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs -v `pwd`/data/broker/store:/root/store -v `pwd`/data/broker/conf/broker.conf:/home/rocketmq/rocketmq-4.5.0/conf/broker.conf --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" apacherocketmq/rocketmq:4.5.0 sh mqbroker -c /home/rocketmq/rocketmq-4.5.0/conf/broker.conf
+docker run -d -p 10911:10911 -p 10909:10909 -v `pwd`/data/broker/logs:/root/logs -v `pwd`/data/broker/store:/root/store -v `pwd`/data/broker/conf/broker.conf:/home/rocketmq/rocketmq-4.5.0/conf/broker.conf --name rmqbroker --link rmqnamesrv:namesrv -e "NAMESRV_ADDR=namesrv:9876" apache/rocketmq:4.5.0 sh mqbroker -c /home/rocketmq/rocketmq-4.5.0/conf/broker.conf
 
 ```
 
@@ -217,7 +217,7 @@ Finally we can find the customized `broker.conf` has been used in the broker con
 
 ```
 MacBook-Pro:4.5.0 huan$ docker ps |grep mqbroker
-a32c67aed6dd        apacherocketmq/rocketmq:4.5.0   "sh mqbroker"       20 minutes ago      Up 20 minutes       0.0.0.0:10909->10909/tcp, 9876/tcp, 0.0.0.0:10911->10911/tcp   rmqbroker
+a32c67aed6dd        apache/rocketmq:4.5.0   "sh mqbroker"       20 minutes ago      Up 20 minutes       0.0.0.0:10909->10909/tcp, 9876/tcp, 0.0.0.0:10911->10911/tcp   rmqbroker
 MacBook-Pro:4.5.0 $ docker exec -it a32c67aed6dd cat /home/rocketmq/rocketmq-4.5.0/conf/broker.conf
 brokerClusterName = DefaultCluster
 brokerName = broker-a
@@ -236,7 +236,7 @@ In the case of docker-compose, change the docker-compose.yml like following:
 version: '2'
 services:
   namesrv:
-    image: apacherocketmq/rocketmq:4.5.0
+    image: apache/rocketmq:4.5.0
     container_name: rmqnamesrv
     ports:
       - 9876:9876
@@ -244,7 +244,7 @@ services:
       - ./data/namesrv/logs:/home/rocketmq/logs
     command: sh mqnamesrv
   broker:
-    image: apacherocketmq/rocketmq:4.5.0
+    image: apache/rocketmq:4.5.0
     container_name: rmqbroker
     ports:
       - 10909:10909

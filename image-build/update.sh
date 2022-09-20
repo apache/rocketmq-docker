@@ -45,5 +45,5 @@ do
     else
         TAG=${LATEST_VERSION}-${baseImage}
     fi
-    docker push apacherocketmq/rocketmq:${TAG}
+    docker push apache/rocketmq:${TAG}
 done

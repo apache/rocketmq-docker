@@ -37,7 +37,7 @@ start_namesrv()
     docker run -d -v ${DATA_HOME}/logs:/home/rocketmq/logs \
       --name rmqnamesrv \
       -p 9876:9876 \
-      apacherocketmq/rocketmq:${ROCKETMQ_VERSION}${TAG_SUFFIX} \
+      apache/rocketmq:${ROCKETMQ_VERSION}${TAG_SUFFIX} \
       sh mqnamesrv
 }
 
