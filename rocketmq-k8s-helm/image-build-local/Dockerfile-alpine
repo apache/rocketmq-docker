@@ -48,7 +48,7 @@ RUN mv ${ROCKETMQ_HOME}/dist/rocketmq*/rocketmq*/* ${ROCKETMQ_HOME}/; \
     ls ${ROCKETMQ_HOME}
 
 # Copy customized scripts
-COPY ./../../image-build/scripts/ ${ROCKETMQ_HOME}/bin/
+COPY scripts/ ${ROCKETMQ_HOME}/bin/
 
 RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
 

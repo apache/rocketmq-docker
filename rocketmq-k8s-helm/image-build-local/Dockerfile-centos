@@ -47,7 +47,7 @@ ENV ROCKETMQ_HOME  /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}
 WORKDIR  ${ROCKETMQ_HOME}
 
 # add scripts
-COPY ./../../image-build/scripts/ ${ROCKETMQ_HOME}/bin/
+COPY scripts/ ${ROCKETMQ_HOME}/bin/
 
 RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
 
