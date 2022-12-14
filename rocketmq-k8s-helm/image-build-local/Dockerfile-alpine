@@ -53,28 +53,17 @@ COPY scripts/ ${ROCKETMQ_HOME}/bin/
 RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
 
 
-# Expose namesrv port
-EXPOSE 9876
+# Expose namesrv / proxy port
+EXPOSE 9876 8080 8081 7001
 
-# Override customized scripts for namesrv
+# Override customized scripts for namesrv/broker/proxy
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
+    mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
- && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv
-
-# Expose broker ports
-EXPOSE 10909 10911 10912
-
-# Override customized scripts for broker
-RUN mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runbroker.sh \
- && chmod a+x ${ROCKETMQ_HOME}/bin/mqbroker
-
-# Expose proxy ports
-EXPOSE 8080 8081 7001
-# Override customized scripts for proxy
-RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
- && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
+ && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqproxy \
+ && chmod a+x ${ROCKETMQ_HOME}/bin/mqbroker
 
 # Export Java options
 RUN export JAVA_OPT=" -Duser.home=/opt"
