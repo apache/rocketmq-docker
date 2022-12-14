@@ -56,7 +56,7 @@ EXPOSE 9876 8080 8081 7001 10909 10911 10912
 
 # Override customized scripts for namesrv/broker/proxy
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
-    mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
+ && mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runbroker.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv \
