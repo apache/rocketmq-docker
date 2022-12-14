@@ -1,0 +1,77 @@
+{{- $fullName := include "rocketmq-broker.fullname" . -}}
+
+{{- $replicaCount := int (add1 .Values.replicaCount) }}
+{{- range $brokerID := until $replicaCount }}
+  {{- $brokerName := printf "broker-%d" 1 }}
+    {{- $brokerFullName := printf "%s-master" $brokerName }}
+    {{- $brokerConfigKey := "broker-master.conf" }}
+    {{- if gt $brokerID 0 }}
+      {{- /* master $brokerID = 0, slave $brokerID > 0 */}}
+      {{- $brokerFullName = printf "%s-replica-%d" $brokerName $brokerID }}
+      {{- $brokerConfigKey = "broker-slave.conf" }}
+    {{- end }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ $fullName }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ $fullName }}
+  selector:
+    matchLabels:
+      {{- include "rocketmq-broker.selectorLabels" . | nindent 6 }}
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "rocketmq-broker.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: onetest-regcred
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ include "rocketmq-broker.brokerImage" . }}
+          {{- if $.Values.image.pullPolicy }}
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          {{- end }}
+          command: ["/bin/sh"]
+          args: ["-c", "./mqbroker -c /home/rocketmq/conf/broker.conf"]
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: BROKER_MEM
+              value: {{ .Values.jvmMemory }}
+            - name: NAMESRV_ADDR
+              value: {{ .Values.namesrvAddr }}
+          ports:
+            - name: broker
+              containerPort: 10911
+              protocol: TCP
+            - name: con-namesrv
+              containerPort: 10909
+              protocol: TCP
+            - name: ha
+              containerPort: 10912
+              protocol: TCP
+            - name: proxy
+              containerPort: 8081
+              protocol: TCP
+          volumeMounts:
+            - name: broker-config
+              mountPath: /home/rocketmq/conf
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: broker-config
+          configMap:
+            name: {{ $fullName }}-conf

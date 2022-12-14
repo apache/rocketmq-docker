@@ -1,0 +1,57 @@
+{{- $nameserverFullName :=  include "rocketmq-nameserver.fullname" . -}}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rocketmq-nameserver.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "rocketmq-nameserver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "rocketmq-nameserver.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: onetest-regcred
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ include "rocketmq-nameserver.namesrvImage" .  }}
+          {{- if .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- end }}
+          ports:
+            - name: nameserver
+              containerPort: {{ include "rocketmq-nameserver.port" . }}
+              protocol: TCP
+          command: [ "/bin/sh" ]
+          args: [ "-c", "./mqnamesrv -c /home/rocketmq/conf/namesrv.p" ]
+          startupProbe:
+            tcpSocket:
+              port: nameserver
+            periodSeconds: 5
+            initialDelaySeconds: 20
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: nameserver
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: nameserver
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 3
+          volumeMounts:
+            - mountPath: /home/rocketmq/conf
+              name: nameserver-config
+      volumes:
+        - name: nameserver-config
+          configMap:
+            name: {{ include "rocketmq-nameserver.fullname" . }}-configmap

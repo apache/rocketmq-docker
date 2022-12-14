@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rocketmq-proxy.fullname" . }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "rocketmq-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "rocketmq-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: onetest-regcred
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ include "rocketmq-proxy.proxyImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ "/bin/sh" ]
+          args: [ "-c", "./mqproxy -pc /home/rocketmq/conf/rmq-proxy.json" ]
+          env:
+            - name: RMQ_PROXY_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESRV_ADDR
+              value: {{ .Values.proxy.namesrvAddr }}
+            - name: RMQ_PROXY_CONFIG_PATH
+              value: /home/rocketmq/rocketmq-proxy/configmap
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - ./bin/mqshutdown
+                  - proxy
+          ports:
+            - name: healthcheck
+              containerPort: 8000
+              protocol: TCP
+            - name: remote-internet
+              containerPort: 7001
+              protocol: TCP
+            - name: remote-internal
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc
+              containerPort: 8081
+              protocol: TCP
+          volumeMounts:
+            - name: conf
+              mountPath: /home/rocketmq/rocketmq-proxy/configmap/
+      volumes:
+        - name: conf
+          configMap:
+            name: {{ include "rocketmq-proxy.fullname" . }}-conf
