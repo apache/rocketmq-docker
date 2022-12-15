@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "rocketmq-broker.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name .Values.broker.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -11,10 +11,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "rocketmq-broker.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.broker.fullnameOverride }}
+{{- .Values.broker.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- $name := default .Chart.Name .Values.broker.nameOverride }}
 {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -50,16 +50,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "rocketmq-broker.clusterName" -}}
-{{- if .Values.broker.clusterNameOverride }}
-{{- .Values.broker.clusterNameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- include "rocketmq-broker.fullname" . }}
+{{- if .Values.broker.conf.clusterNameOverride }}
+{{- .Values.broker.conf.clusterNameOverride | trunc 63 | trimSuffix "-" }}
+{{- else -}}
+DefaultCluster
 {{- end }}
 {{- end }}
 
 {{- define "rocketmq-broker.brokerNamePrefix" -}}
-{{- if .Values.broker.brokerNamePrefixOverride }}
-{{- .Values.broker.brokerNamePrefixOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.broker.conf.brokerNamePrefixOverride }}
+{{- .Values.broker.conf.brokerNamePrefixOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
 {{- include "rocketmq-broker.fullname" . }}
 {{- end }}

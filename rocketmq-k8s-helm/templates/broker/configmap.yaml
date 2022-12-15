@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: broker-conf
+  labels:
+    {{- include "rocketmq-broker.labels" . | nindent 4 }}
+data:
+  broker.conf: |
+    {{ include "rocketmq-broker.config" . | indent 4 }}

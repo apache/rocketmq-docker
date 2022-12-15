@@ -1,12 +1,9 @@
 {{- define "rocketmq-broker.config" -}}
-{{- $name := include "rocketmq-broker.fullname" . }}
 {{- $clusterName := include "rocketmq-broker.clusterName" . }}
 {{- $brokerNamePrefix := include "rocketmq-broker.brokerNamePrefix" . }}
-{{- $config := .Values.config }}
-{{- $replicaCount := .Values.replicaCount | int }}
-{{ $root := . }}
+{{- $config := .Values.broker.config }}
+{{- $replicaCount := .Values.broker.replicaCount | int }}
 {{- range $index := until $replicaCount }}
-  broker.conf: |
     brokerClusterName={{ $clusterName }}
     brokerName={{ $brokerNamePrefix }}-{{ $index }}
     enableNameServerAddressResolve=true

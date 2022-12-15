@@ -1,6 +1,4 @@
-{{- $fullName := include "rocketmq-broker.fullname" . -}}
-
-{{- $replicaCount := int (add1 .Values.replicaCount) }}
+{{- $replicaCount := int (add1 .Values.broker.replicaCount) }}
 {{- range $brokerID := until $replicaCount }}
   {{- $brokerName := printf "broker-%d" 1 }}
     {{- $brokerFullName := printf "%s-master" $brokerName }}
@@ -15,10 +13,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ $fullName }}
+  name: {{ include "rocketmq-broker.fullname" . }}
 spec:
-  replicas: {{ .Values.replicaCount }}
-  serviceName: {{ $fullName }}
+  replicas: {{ .Values.broker.replicaCount }}
+  serviceName: {{ include "rocketmq-broker.fullname" . }}
   selector:
     matchLabels:
       {{- include "rocketmq-broker.selectorLabels" . | nindent 6 }}
@@ -33,7 +31,7 @@ spec:
       imagePullSecrets:
         - name: onetest-regcred
       containers:
-        - name: {{ .Chart.Name }}
+        - name: broker
           image: {{ include "rocketmq-broker.brokerImage" . }}
           {{- if $.Values.image.pullPolicy }}
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
@@ -50,9 +48,9 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: BROKER_MEM
-              value: {{ .Values.jvmMemory }}
+              value: {{ .Values.broker.jvmMemory }}
             - name: NAMESRV_ADDR
-              value: {{ .Values.namesrvAddr }}
+              value: {{ include "rocketmq-nameserver.fullname" . }}:9876
           ports:
             - name: broker
               containerPort: 10911
@@ -74,4 +72,4 @@ spec:
       volumes:
         - name: broker-config
           configMap:
-            name: {{ $fullName }}-conf
+            name: broker-conf

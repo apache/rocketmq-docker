@@ -20,6 +20,6 @@ grpcClientProducerBackoffInitialMillis: 5
 grpcClientProducerBackoffMultiplier: 5
 grpcClientProducerBackoffMaxMillis: 1000
 transactionHeartbeatBatchNum: 1
-rocketMQClusterName= {{ .Values.proxy.rocketMQClusterName }}
-namesrvAddr= {{ .Values.proxy.namesrvAddr }}
+rocketMQClusterName= {{ include "rocketmq-broker.clusterName" . }}
+namesrvAddr= {{ include "rocketmq-nameserver.fullname" . }}:9876
 {{- end -}}

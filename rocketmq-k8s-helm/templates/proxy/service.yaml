@@ -8,11 +8,11 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Cluster
   ports:
-    - port: {{ .Values.service.remotingInternetPort }}
+    - port: {{ .Values.proxy.service.remotingInternetPort }}
       targetPort: 7001
       protocol: TCP
       name: remoting-internet
-    - port: {{ .Values.service.grpcPort }}
+    - port: {{ .Values.proxy.service.grpcPort }}
       targetPort: 8081
       protocol: TCP
       name: grpc

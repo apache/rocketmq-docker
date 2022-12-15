@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "rocketmq-nameserver.fullname" . }}-configmap
+  name: nameserver-conf
   labels:
     {{- include "rocketmq-nameserver.labels" . | nindent 4 }}
 data:
   namesrv.p: |
     listenPort={{ include "rocketmq-nameserver.port" . }}
-    {{ .Values.configmap | indent 4 | trim }}
+    {{ .Values.nameserver.configmap | indent 4 | trim }}

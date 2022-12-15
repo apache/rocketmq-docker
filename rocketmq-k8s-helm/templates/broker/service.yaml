@@ -6,7 +6,7 @@ metadata:
     {{- include "rocketmq-broker.labels" . | nindent 4 }}
 spec:
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ .Values.broker.service.port }}
       targetPort: broker-port
       protocol: TCP
       name: broker-port

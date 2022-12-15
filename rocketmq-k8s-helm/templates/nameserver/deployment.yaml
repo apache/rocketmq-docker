@@ -1,12 +1,9 @@
-{{- $nameserverFullName :=  include "rocketmq-nameserver.fullname" . -}}
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "rocketmq-nameserver.fullname" . }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.nameserver.replicaCount }}
   selector:
     matchLabels:
       {{- include "rocketmq-nameserver.selectorLabels" . | nindent 6 }}
@@ -18,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: onetest-regcred
       containers:
-        - name: {{ .Chart.Name }}
+        - name: nameserver
           image: {{ include "rocketmq-nameserver.namesrvImage" .  }}
           {{- if .Values.image.pullPolicy }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
@@ -54,4 +51,4 @@ spec:
       volumes:
         - name: nameserver-config
           configMap:
-            name: {{ include "rocketmq-nameserver.fullname" . }}-configmap
+            name: nameserver-conf
