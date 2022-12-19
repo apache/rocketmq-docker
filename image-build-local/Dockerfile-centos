@@ -46,6 +46,13 @@ ENV ROCKETMQ_HOME  /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}
 
 WORKDIR  ${ROCKETMQ_HOME}
 
+# Install
+COPY rocketmq/ ${ROCKETMQ_HOME}/dist
+
+RUN mv ${ROCKETMQ_HOME}/dist/rocketmq*/rocketmq*/* ${ROCKETMQ_HOME}/; \
+    rm -rf ${ROCKETMQ_HOME}/dist; \
+    ls ${ROCKETMQ_HOME} \
+
 # add scripts
 COPY scripts ${ROCKETMQ_HOME}/bin/
 
