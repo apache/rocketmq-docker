@@ -51,12 +51,13 @@ COPY rocketmq/ ${ROCKETMQ_HOME}/dist
 
 RUN mv ${ROCKETMQ_HOME}/dist/rocketmq*/rocketmq*/* ${ROCKETMQ_HOME}/; \
     rm -rf ${ROCKETMQ_HOME}/dist; \
-    ls ${ROCKETMQ_HOME} \
+    ls ${ROCKETMQ_HOME}
 
-# add scripts
+# Copy customized scripts
 COPY scripts ${ROCKETMQ_HOME}/bin/
 
 RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
+
 
 # Expose namesrv&proxy port
 EXPOSE 9876 8080 8081 7001
