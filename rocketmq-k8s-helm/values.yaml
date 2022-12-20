@@ -1,13 +1,13 @@
 # Default values for rocketmq-proxy.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-image:
-  pullPolicy: IfNotPresent
-  repository: "cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq"
-  tag: "develop-44e58738-b644-430f-bd94-147cc8f3d731-centos-7"
 
 nameserver:
   replicaCount: 1
+  image:
+    pullPolicy: IfNotPresent
+    repository: "cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq"
+    tag: "develop-44e58738-b644-430f-bd94-147cc8f3d731-centos-7"
 
   imagePullSecrets: [ ]
   nameOverride: "nameserver"
@@ -26,6 +26,7 @@ nameserver:
     name: ""
 
   podAnnotations: { }
+  nodeSelector: { }
 
   podSecurityContext:
     { }
@@ -76,6 +77,10 @@ nameserver:
 
 proxy:
   replicaCount: 1
+  image:
+    pullPolicy: IfNotPresent
+    repository: "cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq"
+    tag: "develop-44e58738-b644-430f-bd94-147cc8f3d731-centos-7"
 
   imagePullSecrets: [ ]
   nameOverride: "proxy"
@@ -146,7 +151,15 @@ proxy:
 
 broker:
   replicaCount: 1
+  image:
+    pullPolicy: IfNotPresent
+    repository: "cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq"
+    tag: "develop-44e58738-b644-430f-bd94-147cc8f3d731-centos-7"
+
   partition: 0
+  persistence:
+    enabled: false
+    size: 8Gi
 
   nameOverride: "broker"
   fullnameOverride: ""
@@ -162,6 +175,12 @@ broker:
     nameServerHeadlessAddr: ""
 
   config: ""
+
+  store:
+    data:
+      size: 10Gi
+    log:
+      size: 10Gi
 
   service:
     port: 10911

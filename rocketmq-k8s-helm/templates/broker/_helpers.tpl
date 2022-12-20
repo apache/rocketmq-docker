@@ -66,5 +66,5 @@ DefaultCluster
 {{- end }}
 
 {{- define "rocketmq-broker.brokerImage" -}}
-{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+{{ .Values.broker.image.repository }}:{{ .Values.broker.image.tag | default .Chart.AppVersion }}
 {{- end }}

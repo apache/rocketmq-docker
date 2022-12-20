@@ -17,15 +17,18 @@ spec:
       containers:
         - name: nameserver
           image: {{ include "rocketmq-nameserver.namesrvImage" .  }}
-          {{- if .Values.image.pullPolicy }}
-          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- if .Values.nameserver.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.nameserver.image.pullPolicy | quote }}
           {{- end }}
           ports:
             - name: nameserver
               containerPort: {{ include "rocketmq-nameserver.port" . }}
               protocol: TCP
           command: [ "/bin/sh" ]
-          args: [ "-c", "./mqnamesrv -c /home/rocketmq/conf/namesrv.p" ]
+          args: [ "-c", "./mqnamesrv -c /home/rocketmq/config/namesrv.p" ]
+          env:
+            - name: JAVA_HEAP_SIZE
+              value: {{ .Values.nameserver.heapSize }}
           startupProbe:
             tcpSocket:
               port: nameserver
@@ -45,10 +48,16 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 1
             failureThreshold: 3
+          resources:
+            {{- toYaml .Values.nameserver.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /home/rocketmq/conf
+            - mountPath: /home/rocketmq/config/
               name: nameserver-config
       volumes:
         - name: nameserver-config
           configMap:
             name: nameserver-conf
+      {{- with .Values.nameserver.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

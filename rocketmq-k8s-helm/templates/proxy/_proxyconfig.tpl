@@ -2,12 +2,13 @@
 Using mergeOverwrite to merge configs from Values into regional config,
 valuse from .Values.config have the higher priority.
 */}}
-{{- define "rocketmq-proxy.conf" -}}
-{{- $regionalConf := fromYaml (include "rocketmq-proxy.regional.conf" . ) -}}
-  rmq-proxy.json: |
-{{- end }}
 
-{{- define "rocketmq-proxy.regional.conf" -}}
+{{- define "rocketmq-proxy.conf" -}}
+{{- $commonConf := fromYaml (include "rocketmq-proxy.common.conf" . ) -}}
+  rmq-proxy.json: |
+{{- mergeOverwrite $commonConf .Values.proxy.config | mustToPrettyJson | nindent 4 }}
+{{- end }}
+{{- define "rocketmq-proxy.common.conf" -}}
 enableFlowControl: true
 enableFlowLimitAction: true
 metricCollectorMode: "proxy"
@@ -20,6 +21,6 @@ grpcClientProducerBackoffInitialMillis: 5
 grpcClientProducerBackoffMultiplier: 5
 grpcClientProducerBackoffMaxMillis: 1000
 transactionHeartbeatBatchNum: 1
-rocketMQClusterName= {{ include "rocketmq-broker.clusterName" . }}
-namesrvAddr= {{ include "rocketmq-nameserver.fullname" . }}:9876
+rocketMQClusterName: "{{ include "rocketmq-broker.clusterName" . }}"
+namesrvAddr: "{{ include "rocketmq-nameserver.fullname" . }}:9876"
 {{- end -}}

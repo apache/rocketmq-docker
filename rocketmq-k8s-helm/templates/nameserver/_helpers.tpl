@@ -51,7 +51,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "rocketmq-nameserver.namesrvImage" -}}
-{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+{{ .Values.nameserver.image.repository }}:{{ .Values.nameserver.image.tag | default .Chart.AppVersion }}
 {{- end }}
 
 {{- define "rocketmq-nameserver.port" -}}

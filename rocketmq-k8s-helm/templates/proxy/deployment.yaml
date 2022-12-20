@@ -23,7 +23,9 @@ spec:
       containers:
         - name: proxy
           image: {{ include "rocketmq-proxy.proxyImage" . }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.proxy.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.proxy.image.pullPolicy | quote }}
+          {{- end }}
           command: [ "/bin/sh" ]
           args: [ "-c", "./mqproxy -pc /home/rocketmq/rocketmq-proxy/configmap/rmq-proxy.json" ]
           env:
@@ -55,6 +57,22 @@ spec:
             - name: grpc
               containerPort: 8081
               protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: healthcheck
+            initialDelaySeconds: 10
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: healthcheck
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: healthcheck
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.proxy.resources | nindent 12 }}
           volumeMounts:
             - name: conf
               mountPath: /home/rocketmq/rocketmq-proxy/configmap/
@@ -62,3 +80,7 @@ spec:
         - name: conf
           configMap:
             name: proxy-conf
+      {{- with .Values.proxy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

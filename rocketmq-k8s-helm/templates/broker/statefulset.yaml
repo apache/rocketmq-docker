@@ -33,11 +33,11 @@ spec:
       containers:
         - name: broker
           image: {{ include "rocketmq-broker.brokerImage" . }}
-          {{- if $.Values.image.pullPolicy }}
-          imagePullPolicy: {{ $.Values.image.pullPolicy }}
-          {{- end }}
-          command: ["/bin/sh"]
-          args: ["-c", "./mqbroker -c /home/rocketmq/conf/broker.conf"]
+        {{- if $.Values.broker.image.pullPolicy }}
+          imagePullPolicy: {{ $.Values.broker.image.pullPolicy }}
+        {{- end }}
+          command: [ "/bin/sh" ]
+          args: [ "-c", "./mqbroker -c /home/rocketmq/conf/broker.conf" ]
           env:
             - name: POD_NAME
               valueFrom:
@@ -64,12 +64,53 @@ spec:
             - name: proxy
               containerPort: 8081
               protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            successThreshold: 1
+            tcpSocket:
+              port: 10911
+            timeoutSeconds: 1
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            successThreshold: 1
+            tcpSocket:
+              port: 10911
+            timeoutSeconds: 1
+          resources:
+            {{- toYaml .Values.broker.resources | nindent 12 }}
           volumeMounts:
-            - name: broker-config
-              mountPath: /home/rocketmq/conf
+            - mountPath: /home/rocketmq/conf
+              name: broker-config
+            - mountPath: /home/rocketmq/logs
+              name: broker-storage
+              subPath: home/rocketmq/rocketmq-broker
+            - mountPath: /root/store
+              name: broker-storage
+              subPath: store/rocketmq-broker
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
+      {{- with .Values.broker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: broker-config
           configMap:
             name: broker-conf
+  {{- if not $.Values.broker.persistence.enabled }}
+        - name: broker-storage
+          emptyDir: { }
+  {{- else }}
+  volumeClaimTemplates:
+    - metadata:
+        name: broker-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.broker.store.data.size }}
+  {{- end }}
