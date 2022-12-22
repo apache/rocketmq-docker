@@ -15,10 +15,15 @@
 # limitations under the License.
 #
 
-ARG BASE_IMAGE
-FROM $BASE_IMAGE
+FROM eclipse-temurin:8
 
-RUN apk add --no-cache bash gettext nmap-ncat openssl busybox-extras libc6-compat
+RUN yum install -y java-1.8.0-openjdk-devel.x86_64 unzip gettext nmap-ncat openssl, which gnupg, telnet \
+ && yum clean all -y
+
+# FROM openjdk:8-jdk
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#		bash libapr1 unzip telnet wget gnupg ca-certificates \
+#	&& rm -rf /var/lib/apt/lists/*
 
 ARG user=rocketmq
 ARG group=rocketmq
@@ -28,8 +33,8 @@ ARG gid=3000
 # RocketMQ is run with user `rocketmq`, uid = 3000
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
-RUN addgroup --gid ${gid} ${group} \
-    && adduser --uid ${uid} -G ${group} ${user} -s /bin/bash -D
+RUN groupadd -g ${gid} ${group} \
+    && useradd -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 ARG version
 
@@ -70,7 +75,7 @@ RUN mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroke
  && chmod a+x ${ROCKETMQ_HOME}/bin/runbroker.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqbroker
 
-# Export Java options
+# export Java options
 RUN export JAVA_OPT=" -Duser.home=/opt"
 
 # Add ${JAVA_HOME}/lib/ext as java.ext.dirs
