@@ -55,13 +55,17 @@ nameserver:
     #    hosts:
     #      - chart-example.local
 
+  persistence:
+    enabled: false
+    size: 8Gi
+
   resources:
     limits:
-      cpu: 40m
-      memory: 1Gi
+      cpu: 1
+      memory: 2Gi
     requests:
-      cpu: 20m
-      memory: 1Gi
+      cpu: 250m
+      memory: 2Gi
 
   autoscaling:
     enabled: false
@@ -131,10 +135,10 @@ proxy:
   resources:
     limits:
       cpu: 1
-      memory: 2Gi
+      memory: 8Gi
     requests:
-      cpu: 80m
-      memory: 2Gi
+      cpu: 1
+      memory: 8Gi
 
   autoscaling:
     enabled: false
@@ -188,11 +192,11 @@ broker:
   jvmMemory: " -Xms4g -Xmx4g -Xmn2g -XX:MaxDirectMemorySize=8g "
   resources:
     limits:
-      cpu: 100m
-      memory: 1Gi
+      cpu: 2
+      memory: 4Gi
     requests:
-      cpu: 100m
-      memory: 1Gi
+      cpu: 2
+      memory: 4Gi
 
   nodeSelector: { }
 

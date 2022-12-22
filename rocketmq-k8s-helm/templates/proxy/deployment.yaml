@@ -45,13 +45,7 @@ spec:
                   - ./bin/mqshutdown
                   - proxy
           ports:
-            - name: healthcheck
-              containerPort: 8000
-              protocol: TCP
-            - name: remote-internet
-              containerPort: 7001
-              protocol: TCP
-            - name: remote-internal
+            - name: remote
               containerPort: 8080
               protocol: TCP
             - name: grpc
@@ -59,17 +53,17 @@ spec:
               protocol: TCP
           startupProbe:
             tcpSocket:
-              port: healthcheck
+              port: grpc
             initialDelaySeconds: 10
             failureThreshold: 30
             periodSeconds: 10
           readinessProbe:
             tcpSocket:
-              port: healthcheck
+              port: grpc
             periodSeconds: 5
           livenessProbe:
             tcpSocket:
-              port: healthcheck
+              port: grpc
             periodSeconds: 10
           resources:
             {{- toYaml .Values.proxy.resources | nindent 12 }}

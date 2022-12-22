@@ -7,10 +7,12 @@ spec:
   selector:
     matchLabels:
       {{- include "rocketmq-nameserver.selectorLabels" . | nindent 6 }}
+      component: nameserver
   template:
     metadata:
       labels:
         {{- include "rocketmq-nameserver.selectorLabels" . | nindent 8 }}
+        component: nameserver
     spec:
       imagePullSecrets:
         - name: onetest-regcred
@@ -20,15 +22,15 @@ spec:
           {{- if .Values.nameserver.image.pullPolicy }}
           imagePullPolicy: {{ .Values.nameserver.image.pullPolicy | quote }}
           {{- end }}
-          ports:
-            - name: nameserver
-              containerPort: {{ include "rocketmq-nameserver.port" . }}
-              protocol: TCP
           command: [ "/bin/sh" ]
           args: [ "-c", "./mqnamesrv -c /home/rocketmq/config/namesrv.p" ]
           env:
             - name: JAVA_HEAP_SIZE
               value: {{ .Values.nameserver.heapSize }}
+          ports:
+            - name: nameserver
+              containerPort: {{ include "rocketmq-nameserver.port" . }}
+              protocol: TCP
           startupProbe:
             tcpSocket:
               port: nameserver
@@ -51,12 +53,16 @@ spec:
           resources:
             {{- toYaml .Values.nameserver.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /home/rocketmq/config/
+            - mountPath: /home/rocketmq/config
               name: nameserver-config
+            - mountPath: /home/rocketmq/logs
+              name: nameserver-log
       volumes:
         - name: nameserver-config
           configMap:
             name: nameserver-conf
+        - name: nameserver-log
+          emptyDir: { }
       {{- with .Values.nameserver.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

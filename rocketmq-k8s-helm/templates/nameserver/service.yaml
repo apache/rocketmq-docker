@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "rocketmq-nameserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.nameserver.service.type }}
+  clusterIP: None
   ports:
     - port: {{ .Values.nameserver.service.servicePort }}
       targetPort: {{ include "rocketmq-nameserver.port" . }}

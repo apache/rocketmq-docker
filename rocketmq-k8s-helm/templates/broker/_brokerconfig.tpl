@@ -1,21 +1,29 @@
 {{- define "rocketmq-broker.config" -}}
+{{- $name := include "rocketmq-broker.fullname" . }}
 {{- $clusterName := include "rocketmq-broker.clusterName" . }}
 {{- $brokerNamePrefix := include "rocketmq-broker.brokerNamePrefix" . }}
 {{- $config := .Values.broker.config }}
 {{- $replicaCount := .Values.broker.replicaCount | int }}
 {{- range $index := until $replicaCount }}
+  {{ $name }}-{{ $index }}: |
     brokerClusterName={{ $clusterName }}
     brokerName={{ $brokerNamePrefix }}-{{ $index }}
     enableNameServerAddressResolve=true
 
-    # common config
+    # common configs
     traceOn=true
-    autoCreateTopicEnable=true
+    autoCreateTopicEnable=false
     autoCreateSubscriptionGroup=true
     enableIncrementalTopicCreation=true
     generateConfigForScaleOutEnable=false
     enableNotifyAfterPopOrderLockRelease=true
     autoMessageVersionOnTopicLen=true
+
+    # pop config
+    enablePopBufferMerge=true
+    enableConsumePopRetryTopic=true
+    enableConsumePullRetryTopic=true
+    enableSkipLongWaitAck=true
 
     # Store config
     flushDiskType=SYNC_FLUSH
