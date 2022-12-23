@@ -26,7 +26,7 @@ JAVA_VERSION=$3
 IMAGE_REPO_USERNAME=$4
 IMAGE_REPO_PASSWORD=$5
 
-TAG=${ROCKETMQ_VERSION}-$(echo $BASE_IMAGE | sed -e "s/:/-/g")-${JAVA_VERSION}
+TAG=${ROCKETMQ_VERSION}-$(echo $BASE_IMAGE | sed -e "s/:/-/g")
 
 cp -r ../../rocketmq ./
 
