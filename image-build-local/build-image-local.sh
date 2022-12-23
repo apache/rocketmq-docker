@@ -26,7 +26,7 @@ JAVA_VERSION=$3
 IMAGE_REPO_USERNAME=$4
 IMAGE_REPO_PASSWORD=$5
 
-TAG=${ROCKETMQ_VERSION}-$(echo $BASE_IMAGE | sed -e "s/:/-/g")
+TAG=${ROCKETMQ_VERSION}-$(echo $BASE_IMAGE | sed -e "s/:/-/g")-${JAVA_VERSION}
 
 cp -r ../../rocketmq ./
 
@@ -47,7 +47,7 @@ centos)
   if [ "$JAVA_VERSION" -eq 8 ]; then
     docker build --no-cache -f Dockerfile-centos -t cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq:${TAG} --build-arg version=${ROCKETMQ_VERSION} --build-arg BASE_IMAGE=eclipse-temurin:8-centos7 .
   elif [ "$JAVA_VERSION" -eq 11 ]; then
-    docker build --no-cache -f Dockerfile-alpine -t cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq:${TAG} --build-arg version=${ROCKETMQ_VERSION} --build-arg BASE_IMAGE=eclipse-temurin:11-centos7 .
+    docker build --no-cache -f Dockerfile-centos -t cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq:${TAG} --build-arg version=${ROCKETMQ_VERSION} --build-arg BASE_IMAGE=eclipse-temurin:11-centos7 .
   else
     echo "in ${BASE_IMAGE}, jdk ${JAVA_VERSION} is not supported, supported java versions: 8, 11"
   fi
@@ -55,7 +55,6 @@ centos)
 ubuntu)
   if [ "$JAVA_VERSION" -eq 8 ]; then
     docker build --no-cache -f Dockerfile-ubuntu -t cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq:${TAG} --build-arg version=${ROCKETMQ_VERSION} --build-arg BASE_IMAGE=eclipse-temurin:8-jre .
-    echo "ssss"
   elif [ "$JAVA_VERSION" -eq 11 ]; then
     docker build --no-cache -f Dockerfile-ubuntu -t cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq:${TAG} --build-arg version=${ROCKETMQ_VERSION} --build-arg BASE_IMAGE=eclipse-temurin:11-jre .
   else
