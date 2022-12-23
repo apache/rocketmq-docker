@@ -31,7 +31,7 @@ find_java_home()
             JAVA_HOME=$(/usr/libexec/java_home)
         ;;
         *)
-            JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+            JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
         ;;
     esac
 }
