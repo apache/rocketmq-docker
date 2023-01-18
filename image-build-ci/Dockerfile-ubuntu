@@ -55,6 +55,11 @@ RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
 # Expose namesrv&proxy port
 EXPOSE 9876 8080 8081 7001
 
+RUN wget https://pasmicrosservice.oss-cn-hangzhou.aliyuncs.com/tools/jacoco-0.8.8.zip -O jacoco-0.8.8.zip && \
+unzip jacoco-0.8.8.zip -d jacoco
+
+ENV JAVA_OPTS="-javaagent:${ROCKETMQ_HOME}/jacoco/lib/jacocoagent.jar=includes=*,output=tcpserver,port=2019,address=0.0.0.0"
+
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqadmin \
