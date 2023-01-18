@@ -18,6 +18,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+RUN apt-get install unzip
+
 ARG user=rocketmq
 ARG group=rocketmq
 ARG uid=3000
@@ -55,7 +57,7 @@ RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
 # Expose namesrv&proxy port
 EXPOSE 9876 8080 8081 7001 2023
 
-RUN wget https://pasmicrosservice.oss-cn-hangzhou.aliyuncs.com/tools/jacoco-0.8.8.zip -O jacoco-0.8.8.zip && \
+RUN wget https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.8/jacoco-0.8.8.zip -O jacoco-0.8.8.zip && \
 unzip jacoco-0.8.8.zip -d jacoco
 
 ENV JAVA_OPTS="-javaagent:${ROCKETMQ_HOME}/jacoco/lib/jacocoagent.jar=includes=*,output=tcpserver,port=2023,address=0.0.0.0"
