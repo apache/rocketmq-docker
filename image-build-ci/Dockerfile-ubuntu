@@ -18,7 +18,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
-RUN apt-get install unzip
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		bash unzip telnet wget gnupg ca-certificates \
 
 ARG user=rocketmq
 ARG group=rocketmq
