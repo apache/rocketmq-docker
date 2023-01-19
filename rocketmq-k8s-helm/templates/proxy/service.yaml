@@ -5,8 +5,7 @@ metadata:
   labels:
     {{- include "rocketmq-proxy.labels" . | nindent 4 }}
 spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Cluster
+  clusterIP: None
   ports:
     - port: {{ .Values.proxy.service.remotingInternetPort }}
       targetPort: 7001
