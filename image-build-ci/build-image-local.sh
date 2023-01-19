@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if [ $# -lt 5 ]; then
-  echo -e "Usage: sh $0 ROCKETMQ_VERSION BASE_IMAGE JAVA_VERSION IMAGE_REPO_USERNAME IMAGE_REPO_PASSWORD"
+if [ $# -lt 6 ]; then
+  echo -e "Usage: sh $0 ROCKETMQ_VERSION BASE_IMAGE JAVA_VERSION IMAGE_REPO IMAGE_REPO_USERNAME IMAGE_REPO_PASSWORD"
   exit -1
 fi
 
