@@ -6,8 +6,8 @@ nameserver:
   replicaCount: 1
   image:
     pullPolicy: IfNotPresent
-    repository: "cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq"
-    tag: "develop-44e58738-b644-430f-bd94-147cc8f3d731-centos-7"
+    repository: "apache/rocketmq"
+    tag: "latest"
 
   imagePullSecrets: [ ]
   nameOverride: "nameserver"
@@ -83,8 +83,8 @@ proxy:
   replicaCount: 1
   image:
     pullPolicy: IfNotPresent
-    repository: "cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq"
-    tag: "develop-44e58738-b644-430f-bd94-147cc8f3d731-centos-7"
+    repository: "apache/rocketmq"
+    tag: "latest"
 
   imagePullSecrets: [ ]
   nameOverride: "proxy"
@@ -157,8 +157,8 @@ broker:
   replicaCount: 1
   image:
     pullPolicy: IfNotPresent
-    repository: "cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/rocketmq"
-    tag: "develop-44e58738-b644-430f-bd94-147cc8f3d731-centos-7"
+    repository: "apache/rocketmq"
+    tag: "latest"
 
   partition: 0
   persistence:

@@ -61,7 +61,7 @@ EXPOSE 9876 8080 8081 7001 2023
 RUN wget https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.8/jacoco-0.8.8.zip -O jacoco-0.8.8.zip && \
 unzip jacoco-0.8.8.zip -d jacoco
 
-ENV JAVA_OPTS="-javaagent:${ROCKETMQ_HOME}/jacoco/lib/jacocoagent.jar=includes=*,output=tcpserver,port=2023,address=0.0.0.0"
+ENV JAVA_OPT="-javaagent:${ROCKETMQ_HOME}/jacoco/lib/jacocoagent.jar=includes=*,output=tcpserver,port=2023,address=0.0.0.0"
 
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
