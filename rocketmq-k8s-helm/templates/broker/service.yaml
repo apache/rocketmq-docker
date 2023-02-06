@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rocketmq-broker.fullname" . }}
+  labels:
+    {{- include "rocketmq-broker.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: {{ .Values.broker.service.port }}
+      targetPort: broker-port
+      protocol: TCP
+      name: broker-port
+  selector:
+    {{- include "rocketmq-broker.selectorLabels" . | nindent 4 }}
+  clusterIP: None

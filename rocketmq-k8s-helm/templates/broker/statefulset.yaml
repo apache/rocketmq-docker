@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "rocketmq-broker.fullname" . }}
+spec:
+  replicas: {{ .Values.broker.replicaCount }}
+  serviceName: {{ include "rocketmq-broker.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "rocketmq-broker.selectorLabels" . | nindent 6 }}
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "rocketmq-broker.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: onetest-regcred
+      containers:
+        - name: broker
+          image: {{ include "rocketmq-broker.brokerImage" . }}
+        {{- if $.Values.broker.image.pullPolicy }}
+          imagePullPolicy: {{ $.Values.broker.image.pullPolicy }}
+        {{- end }}
+          command: [ "/bin/sh" ]
+          args: [ "-c", "./mqbroker -c /home/rocketmq/conf/$(POD_NAME)" ]
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: BROKER_MEM
+              value: {{ .Values.broker.jvmMemory }}
+            - name: NAMESRV_ADDR
+              value: {{ include "rocketmq-nameserver.fullname" . }}:9876
+          ports:
+            - name: broker
+              containerPort: 10911
+              protocol: TCP
+            - name: con-nameserver
+              containerPort: 10909
+              protocol: TCP
+            - name: ha
+              containerPort: 10912
+              protocol: TCP
+            - name: proxy
+              containerPort: 8081
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            successThreshold: 1
+            tcpSocket:
+              port: 10911
+            timeoutSeconds: 1
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            successThreshold: 1
+            tcpSocket:
+              port: 10911
+            timeoutSeconds: 1
+          resources:
+            {{- toYaml .Values.broker.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /home/rocketmq/conf
+              name: broker-config
+            - mountPath: /home/rocketmq/logs
+              name: broker-storage
+              subPath: home/rocketmq/rocketmq-broker
+            - mountPath: /root/store
+              name: broker-storage
+              subPath: store/rocketmq-broker
+      {{- with .Values.broker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: broker-config
+          configMap:
+            name: broker-conf
+  {{- if not $.Values.broker.persistence.enabled }}
+        - name: broker-storage
+          emptyDir: { }
+  {{- else }}
+  volumeClaimTemplates:
+    - metadata:
+        name: broker-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.broker.store.data.size }}
+  {{- end }}

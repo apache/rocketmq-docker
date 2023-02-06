@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rocketmq-proxy.fullname" . }}
+spec:
+{{- if not .Values.proxy.autoscaling.enabled }}
+  replicas: {{ .Values.proxy.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "rocketmq-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.proxy.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "rocketmq-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: onetest-regcred
+      containers:
+        - name: proxy
+          image: {{ include "rocketmq-proxy.proxyImage" . }}
+          {{- if .Values.proxy.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.proxy.image.pullPolicy | quote }}
+          {{- end }}
+          command: [ "/bin/sh" ]
+          args: [ "-c", "./mqproxy -pc /home/rocketmq/rocketmq-proxy/configmap/rmq-proxy.json" ]
+          env:
+            - name: RMQ_PROXY_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESRV_ADDR
+              value: {{ include "rocketmq-nameserver.fullname" . }}:9876
+            - name: RMQ_PROXY_CONFIG_PATH
+              value: /home/rocketmq/rocketmq-proxy/configmap
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - ./bin/mqshutdown
+                  - proxy
+          ports:
+            - name: remote
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc
+              containerPort: 8081
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 10
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.proxy.resources | nindent 12 }}
+          volumeMounts:
+            - name: conf
+              mountPath: /home/rocketmq/rocketmq-proxy/configmap/
+      volumes:
+        - name: conf
+          configMap:
+            name: proxy-conf
+      {{- with .Values.proxy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

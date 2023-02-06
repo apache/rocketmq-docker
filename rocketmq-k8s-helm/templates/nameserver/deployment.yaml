@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rocketmq-nameserver.fullname" . }}
+spec:
+  replicas: {{ .Values.nameserver.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "rocketmq-nameserver.selectorLabels" . | nindent 6 }}
+      component: nameserver
+  template:
+    metadata:
+      labels:
+        {{- include "rocketmq-nameserver.selectorLabels" . | nindent 8 }}
+        component: nameserver
+    spec:
+      imagePullSecrets:
+        - name: onetest-regcred
+      containers:
+        - name: nameserver
+          image: {{ include "rocketmq-nameserver.namesrvImage" .  }}
+          {{- if .Values.nameserver.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.nameserver.image.pullPolicy | quote }}
+          {{- end }}
+          command: [ "/bin/sh" ]
+          args: [ "-c", "./mqnamesrv -c /home/rocketmq/config/namesrv.p" ]
+          env:
+            - name: JAVA_HEAP_SIZE
+              value: {{ .Values.nameserver.heapSize }}
+          ports:
+            - name: nameserver
+              containerPort: {{ include "rocketmq-nameserver.port" . }}
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: nameserver
+            periodSeconds: 5
+            initialDelaySeconds: 20
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: nameserver
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: nameserver
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.nameserver.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /home/rocketmq/config
+              name: nameserver-config
+            - mountPath: /home/rocketmq/logs
+              name: nameserver-log
+      volumes:
+        - name: nameserver-config
+          configMap:
+            name: nameserver-conf
+        - name: nameserver-log
+          emptyDir: { }
+      {{- with .Values.nameserver.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

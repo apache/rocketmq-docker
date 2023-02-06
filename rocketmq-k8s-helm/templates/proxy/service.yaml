@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rocketmq-proxy.fullname" . }}
+  labels:
+    {{- include "rocketmq-proxy.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.proxy.service.remotingInternetPort }}
+      targetPort: 7001
+      protocol: TCP
+      name: remoting-internet
+    - port: {{ .Values.proxy.service.grpcPort }}
+      targetPort: 8081
+      protocol: TCP
+      name: grpc
+  selector:
+    {{- include "rocketmq-proxy.selectorLabels" . | nindent 4 }}

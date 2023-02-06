@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rocketmq-nameserver.fullname" . }}
+  labels:
+    {{- include "rocketmq-nameserver.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.nameserver.service.servicePort }}
+      targetPort: {{ include "rocketmq-nameserver.port" . }}
+      protocol: TCP
+      name: nameserver-service
+  selector:
+    {{- include "rocketmq-nameserver.selectorLabels" . | nindent 4 }}
