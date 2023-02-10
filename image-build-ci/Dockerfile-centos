@@ -64,6 +64,7 @@ RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
 EXPOSE 9876 8080 8081 7001
 
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
+ && mv ${ROCKETMQ_HOME}/bin/tools-customize.sh ${ROCKETMQ_HOME}/bin/tools.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqadmin \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv \

@@ -64,6 +64,7 @@ unzip jacoco-0.8.8.zip -d jacoco
 ENV JAVA_OPT="-javaagent:${ROCKETMQ_HOME}/jacoco/lib/jacocoagent.jar=includes=*,output=tcpserver,port=2023,address=0.0.0.0"
 
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
+ && mv ${ROCKETMQ_HOME}/bin/tools-customize.sh ${ROCKETMQ_HOME}/bin/tools.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqadmin \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv \
