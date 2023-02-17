@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if [ $# -lt 6 ]; then
-  echo -e "Usage: sh $0 ROCKETMQ_VERSION BASE_IMAGE JAVA_VERSION IMAGE_REPO IMAGE_REPO_USERNAME IMAGE_REPO_PASSWORD"
+if [ $# -lt 4 ]; then
+  echo -e "Usage: sh $0 ROCKETMQ_VERSION BASE_IMAGE JAVA_VERSION IMAGE_REPO "
   exit -1
 fi
 
@@ -24,8 +24,6 @@ ROCKETMQ_VERSION=$1
 BASE_IMAGE=$2
 JAVA_VERSION=$3
 IMAGE_REPO=$4
-IMAGE_REPO_USERNAME=$5
-IMAGE_REPO_PASSWORD=$6
 
 TAG=${ROCKETMQ_VERSION}-$(echo $BASE_IMAGE | sed -e "s/:/-/g")
 
