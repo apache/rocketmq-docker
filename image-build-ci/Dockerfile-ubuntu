@@ -21,7 +21,7 @@ FROM $BASE_IMAGE
 USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		bash vim unzip telnet wget gnupg ca-certificates
+		bash vim unzip telnet openssl wget gnupg ca-certificates
 
 ARG version
 

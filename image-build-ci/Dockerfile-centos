@@ -18,24 +18,10 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+USER root
+
 RUN yum install -y java-1.8.0-openjdk-devel.x86_64 unzip gettext nmap-ncat openssl, which gnupg, telnet \
  && yum clean all -y
-
-# FROM openjdk:8-jdk
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#		bash libapr1 unzip telnet wget gnupg ca-certificates \
-#	&& rm -rf /var/lib/apt/lists/*
-
-ARG user=rocketmq
-ARG group=rocketmq
-ARG uid=3000
-ARG gid=3000
-
-# RocketMQ is run with user `rocketmq`, uid = 3000
-# If you bind mount a volume from the host or a data container,
-# ensure you use the same uid
-RUN groupadd -g ${gid} ${group} \
-    && useradd -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 ARG version
 
@@ -82,7 +68,5 @@ RUN export JAVA_OPT=" -Duser.home=/opt"
 
 # Add ${JAVA_HOME}/lib/ext as java.ext.dirs
 RUN sed -i 's/${JAVA_HOME}\/jre\/lib\/ext/${JAVA_HOME}\/jre\/lib\/ext:${JAVA_HOME}\/lib\/ext/' ${ROCKETMQ_HOME}/bin/tools.sh
-
-USER ${user}
 
 WORKDIR ${ROCKETMQ_HOME}/bin

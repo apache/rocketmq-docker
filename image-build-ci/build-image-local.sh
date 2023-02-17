@@ -31,8 +31,6 @@ TAG=${ROCKETMQ_VERSION}-$(echo $BASE_IMAGE | sed -e "s/:/-/g")
 
 cp -r ../../rocketmq ./
 
-docker login --username=$IMAGE_REPO_USERNAME --password=$IMAGE_REPO_PASSWORD ${IMAGE_REPO%%/*}
-
 # Build rocketmq
 case "${BASE_IMAGE}" in
 #alpine)
