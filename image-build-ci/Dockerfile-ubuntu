@@ -18,19 +18,10 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+USER root
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		bash unzip telnet wget gnupg ca-certificates
-
-ARG user=rocketmq
-ARG group=rocketmq
-ARG uid=3000
-ARG gid=3000
-
-# RocketMQ is run with user `rocketmq`, uid = 3000
-# If you bind mount a volume from the host or a data container,
-# ensure you use the same uid
-RUN groupadd -g ${gid} ${group} \
-    && useradd -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+		bash vim unzip telnet openssl wget gnupg ca-certificates
 
 ARG version
 
@@ -38,7 +29,7 @@ ARG version
 ENV ROCKETMQ_VERSION ${version}
 
 # Rocketmq home
-ENV ROCKETMQ_HOME  /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}
+ENV ROCKETMQ_HOME  /root/rocketmq-${ROCKETMQ_VERSION}
 
 WORKDIR  ${ROCKETMQ_HOME}
 
@@ -64,6 +55,7 @@ unzip jacoco-0.8.8.zip -d jacoco
 ENV JAVA_OPT="-javaagent:${ROCKETMQ_HOME}/jacoco/lib/jacocoagent.jar=includes=*,output=tcpserver,port=2023,address=0.0.0.0"
 
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
+ && mv ${ROCKETMQ_HOME}/bin/tools-customize.sh ${ROCKETMQ_HOME}/bin/tools.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqadmin \
  && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv \
@@ -81,7 +73,5 @@ RUN export JAVA_OPT=" -Duser.home=/opt"
 
 # Add ${JAVA_HOME}/lib/ext as java.ext.dirs
 RUN sed -i 's/${JAVA_HOME}\/jre\/lib\/ext/${JAVA_HOME}\/jre\/lib\/ext:${JAVA_HOME}\/lib\/ext/' ${ROCKETMQ_HOME}/bin/tools.sh
-
-USER ${user}
 
 WORKDIR ${ROCKETMQ_HOME}/bin
