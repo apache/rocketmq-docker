@@ -15,26 +15,39 @@
 # limitations under the License.
 #
 
-FROM centos:7
+################################################################################
+# Build stage 1 `builder`:
+# Download and extract RocketMQ
+################################################################################
+FROM eclipse-temurin:8-jdk-centos7 AS builder
 
-RUN yum install -y java-1.8.0-openjdk-devel.x86_64 unzip gettext nmap-ncat openssl, which gnupg, telnet \
- && yum clean all -y
+ARG version
 
-# FROM openjdk:8-jdk
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#		bash libapr1 unzip telnet wget gnupg ca-certificates \
-#	&& rm -rf /var/lib/apt/lists/*
+RUN set -eux \
+    && yum -y update \
+    && yum -y install curl gnupg unzip \
+    && yum clean all -y
+
+RUN curl -L https://archive.apache.org/dist/rocketmq/${version}/rocketmq-all-${version}-bin-release.zip -o rocketmq.zip \
+    && curl -L https://archive.apache.org/dist/rocketmq/${version}/rocketmq-all-${version}-bin-release.zip.asc -o rocketmq.zip.asc \
+	&& curl -L https://www.apache.org/dist/rocketmq/KEYS -o KEYS \
+    && gpg --import KEYS \
+    && gpg --batch --verify rocketmq.zip.asc rocketmq.zip
+
+RUN unzip rocketmq.zip \
+    && mkdir -p /tmp/rocketmq-${version} \
+	&& mv rocketmq*/* /tmp/rocketmq-${version}
+
+################################################################################
+# Build stage 2:
+# Make the actual RocketMQ docker image
+################################################################################
+FROM eclipse-temurin:8-jdk-centos7
 
 ARG user=rocketmq
 ARG group=rocketmq
 ARG uid=3000
 ARG gid=3000
-
-# RocketMQ is run with user `rocketmq`, uid = 3000
-# If you bind mount a volume from the host or a data container,
-# ensure you use the same uid
-RUN groupadd -g ${gid} ${group} \
-    && useradd -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 ARG version
 
@@ -44,48 +57,45 @@ ENV ROCKETMQ_VERSION ${version}
 # Rocketmq home
 ENV ROCKETMQ_HOME  /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}
 
-WORKDIR  ${ROCKETMQ_HOME}
-
-RUN set -eux; \
-    curl -L https://archive.apache.org/dist/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o rocketmq.zip; \
-    curl -L https://archive.apache.org/dist/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip.asc -o rocketmq.zip.asc; \
-    #https://www.apache.org/dist/rocketmq/KEYS
-	curl -L https://www.apache.org/dist/rocketmq/KEYS -o KEYS; \
-	\
-	gpg --import KEYS; \
-    gpg --batch --verify rocketmq.zip.asc rocketmq.zip ; \
-    unzip rocketmq.zip ; \
-	mv rocketmq*/* . ; \
-	rmdir rocketmq-*  ; \
-	rm rocketmq.zip rocketmq.zip.asc KEYS
-
-# add scripts
-COPY scripts/ ${ROCKETMQ_HOME}/bin/
-
-RUN chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
-
 # expose namesrv port
 EXPOSE 9876
-
-# add customized scripts for namesrv
-RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
- && chmod a+x ${ROCKETMQ_HOME}/bin/runserver.sh \
- && chmod a+x ${ROCKETMQ_HOME}/bin/mqnamesrv
 
 # expose broker ports
 EXPOSE 10909 10911 10912
 
-# add customized scripts for broker
-RUN mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
- && chmod a+x ${ROCKETMQ_HOME}/bin/runbroker.sh \
- && chmod a+x ${ROCKETMQ_HOME}/bin/mqbroker
+# RocketMQ is run with user `rocketmq`, uid = 3000
+# If you bind mount a volume from the host or a data container,
+# ensure you use the same uid
+RUN groupadd -g ${gid} ${group} \
+    && useradd -l -u ${uid} -g ${gid} -m -s /bin/bash ${user} \
+    && yum -y update \
+    && yum -y install less openssl \
+    && yum clean all -y && rm -rf /var/cache/yum 
 
-# export Java options
-RUN export JAVA_OPT=" -Duser.home=/opt"
 
+
+# Copy customized scripts
+COPY scripts/ ${ROCKETMQ_HOME}/bin/
+
+# Copy RocketMQ artifact from builder
+COPY --from=builder --chown=${uid}:${gid} /tmp/rocketmq-${version}/ ${ROCKETMQ_HOME}
+
+# Override customized scripts for namesrv
+# Override customized scripts for broker
+# Export Java options
 # Add ${JAVA_HOME}/lib/ext as java.ext.dirs
-RUN sed -i 's/${JAVA_HOME}\/jre\/lib\/ext/${JAVA_HOME}\/jre\/lib\/ext:${JAVA_HOME}\/lib\/ext/' ${ROCKETMQ_HOME}/bin/tools.sh
+RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
+ && mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
+# && chmod -R a+x ${ROCKETMQ_HOME}/bin/ \
+ && export JAVA_OPT=" -Duser.home=/opt" \
+ && sed -i 's/${JAVA_HOME}\/jre\/lib\/ext/${JAVA_HOME}\/jre\/lib\/ext:${JAVA_HOME}\/lib\/ext/' ${ROCKETMQ_HOME}/bin/tools.sh \
+ && chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
+
 
 USER ${user}
 
 WORKDIR ${ROCKETMQ_HOME}/bin
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
+# Dummy overridable parameter parsed by entrypoint
+CMD ["dummy"]
