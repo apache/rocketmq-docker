@@ -67,7 +67,7 @@ EXPOSE 10909 10911 10912
 # ensure you use the same uid
 RUN addgroup --gid ${gid} ${group} \
     && adduser --uid ${uid} -G ${group} ${user} -s /bin/bash -D \
-    && apk add --no-cache bash gettext nmap-ncat openssl busybox-extras
+    && apk add --no-cache bash gettext nmap-ncat openssl busybox-extras which
 
 # Copy customized scripts
 COPY scripts/ ${ROCKETMQ_HOME}/bin/
