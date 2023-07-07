@@ -24,7 +24,7 @@ FROM eclipse-temurin:8-jdk-alpine AS builder
 ARG version
 
 RUN set -eux; \
-    apk add --virtual .build-deps curl gnupg unzip which;
+    apk add --virtual .build-deps curl gnupg unzip;
 
 RUN curl -L https://archive.apache.org/dist/rocketmq/${version}/rocketmq-all-${version}-bin-release.zip -o rocketmq.zip; \
     curl -L https://archive.apache.org/dist/rocketmq/${version}/rocketmq-all-${version}-bin-release.zip.asc -o rocketmq.zip.asc; \
@@ -67,7 +67,7 @@ EXPOSE 10909 10911 10912
 # ensure you use the same uid
 RUN addgroup --gid ${gid} ${group} \
     && adduser --uid ${uid} -G ${group} ${user} -s /bin/bash -D \
-    && apk add --no-cache bash gettext nmap-ncat openssl busybox-extras
+    && apk add --no-cache bash gettext nmap-ncat openssl busybox-extras which
 
 # Copy customized scripts
 COPY scripts/ ${ROCKETMQ_HOME}/bin/
