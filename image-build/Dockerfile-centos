@@ -25,7 +25,7 @@ ARG version
 
 RUN set -eux \
     && yum -y update \
-    && yum -y install curl gnupg unzip \
+    && yum -y install curl gnupg unzip which telnet \
     && yum clean all -y
 
 RUN curl -L https://archive.apache.org/dist/rocketmq/${version}/rocketmq-all-${version}-bin-release.zip -o rocketmq.zip \

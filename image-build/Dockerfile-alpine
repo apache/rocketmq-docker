@@ -24,7 +24,7 @@ FROM eclipse-temurin:8-jdk-alpine AS builder
 ARG version
 
 RUN set -eux; \
-    apk add --virtual .build-deps curl gnupg unzip;
+    apk add --virtual .build-deps curl gnupg unzip which;
 
 RUN curl -L https://archive.apache.org/dist/rocketmq/${version}/rocketmq-all-${version}-bin-release.zip -o rocketmq.zip; \
     curl -L https://archive.apache.org/dist/rocketmq/${version}/rocketmq-all-${version}-bin-release.zip.asc -o rocketmq.zip.asc; \
