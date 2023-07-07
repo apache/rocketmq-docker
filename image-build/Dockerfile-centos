@@ -86,7 +86,7 @@ COPY --from=builder --chown=${uid}:${gid} /tmp/rocketmq-${version}/ ${ROCKETMQ_H
 # Add ${JAVA_HOME}/lib/ext as java.ext.dirs
 RUN mv ${ROCKETMQ_HOME}/bin/runserver-customize.sh ${ROCKETMQ_HOME}/bin/runserver.sh \
  && mv ${ROCKETMQ_HOME}/bin/runbroker-customize.sh ${ROCKETMQ_HOME}/bin/runbroker.sh \
-# && chmod -R a+x ${ROCKETMQ_HOME}/bin/ \
+ && chmod -R a+x ${ROCKETMQ_HOME}/bin/ \
  && export JAVA_OPT=" -Duser.home=/opt" \
  && sed -i 's/${JAVA_HOME}\/jre\/lib\/ext/${JAVA_HOME}\/jre\/lib\/ext:${JAVA_HOME}\/lib\/ext/' ${ROCKETMQ_HOME}/bin/tools.sh \
  && chown -R ${uid}:${gid} ${ROCKETMQ_HOME}
