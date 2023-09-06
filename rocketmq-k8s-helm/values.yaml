@@ -76,7 +76,6 @@ nameserver:
 
   configmap: |
     defaultThreadPoolNums=4
-    deleteTopicWithBrokerRegistration=true
 
 
 proxy:
