@@ -1,0 +1,69 @@
+version: '2'
+services:
+  #Service for nameserver
+  namesrv:
+    image: apache/rocketmq:ROCKETMQ_VERSION
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    volumes:
+      - ./data/namesrv/logs:/home/rocketmq/logs
+    command: sh mqnamesrv
+
+  #Service for broker
+  broker:
+    image: apache/rocketmq:ROCKETMQ_VERSION
+    container_name: rmqbroker
+    links:
+      - namesrv
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+    volumes:
+      - ./data/broker/logs:/home/rocketmq/logs
+      - ./data/broker/store:/home/rocketmq/store
+      - ./data/broker/conf/broker.conf:/opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
+    command: sh mqbroker -c /opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
+
+  #Service for another broker -- broker1
+  broker1:
+    image: apache/rocketmq:ROCKETMQ_VERSION
+    container_name: rmqbroker-b
+    links:
+      - namesrv
+    ports:
+      - 10929:10909
+      - 10931:10911
+      - 10932:10912
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+    volumes:
+      - ./data1/broker/logs:/home/rocketmq/logs
+      - ./data1/broker/store:/home/rocketmq/store
+      - ./data1/broker/conf/broker.conf:/opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
+    command: sh mqbroker -c /opt/rocketmq-ROCKETMQ_VERSION/conf/broker.conf
+
+  #Service for proxy
+  proxy:
+    image: apache/rocketmq:ROCKETMQ_VERSION
+    container_name: rmqproxy
+    links:
+      - namesrv
+      - broker
+      - broker1
+    depends_on:
+      - broker
+      - broker1
+    ports:
+      - 8080:8080
+      - 8081:8081
+    restart: on-failure
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+    volumes:
+      - ./proxy/logs:/home/rocketmq/logs
+      - ./proxy/conf/rmq-proxy.json:/opt/rocketmq-ROCKETMQ_VERSION/conf/rmq-proxy.json
+    command: sh mqproxy -pc /opt/rocketmq-ROCKETMQ_VERSION/conf/rmq-proxy.json
