@@ -25,7 +25,7 @@ fi
 
 prepare_dir()
 {
-    dirs=("docker-compose/data/namesrv/logs" "docker-compose/data/broker/logs" "docker-compose/data/broker/store" "docker-compose/data1/broker/logs" "docker-compose/data1/broker/store")
+    dirs=("docker-compose/data/namesrv/logs" "docker-compose/data/broker/logs" "docker-compose/data/broker/store" "docker-compose/data1/broker/logs" "docker-compose/data1/broker/store" "docker-compose/proxy/logs")
 
     for dir in ${dirs[@]}
     do

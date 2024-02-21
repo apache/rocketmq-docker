@@ -46,9 +46,18 @@ fi
 echo "mkdir $STAGE_DIR/$version"
 mkdir -p "$STAGE_DIR/$version"
 
-cp -rf "$CURRENT_DIR/templates/" "$STAGE_DIR/$version"
+cp -rf "$CURRENT_DIR/templates" "$STAGE_DIR/$version"
 
 echo "staged templates into folder $STAGE_DIR/$version"
 
 # Replace string "ROCKETMQ_VERSION" with real version in all files under $STAGE_DIR/$version
 find "$STAGE_DIR/$version" -type f | xargs perl -pi -e "s/ROCKETMQ_VERSION/${version}/g"
+
+
+if [[ "${version}" > "5.0.0" ]]; then
+    cp $STAGE_DIR/$version/templates/docker-compose/rmq5-docker-compose.yml $STAGE_DIR/$version/templates/docker-compose/docker-compose.yml
+else
+    cp $STAGE_DIR/$version/templates/docker-compose/rmq4-docker-compose.yml $STAGE_DIR/$version/templates/docker-compose/docker-compose.yml
+fi
+
+rm $STAGE_DIR/$version/templates/docker-compose/rmq4-docker-compose.yml $STAGE_DIR/$version/templates/docker-compose/rmq5-docker-compose.yml
