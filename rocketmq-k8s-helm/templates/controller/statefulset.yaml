@@ -1,0 +1,109 @@
+{{- /*
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: {{ include "controller.fullname" . }}
+  labels:
+    {{- include "controller.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.controller.replicas }}
+  selector:
+    matchLabels:
+      {{- include "controller.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "controller.fullname" . }}
+  template: 
+    metadata: 
+      annotations: 
+        checksum/config: {{ include (print $.Template.BasePath "/controller/configmap.yaml") . | sha256sum }}
+      labels:
+        {{- include "controller.labels" . | nindent 8 }}
+    spec: 
+      {{- with .Values.controller.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controller.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers: 
+      - name: controller
+        image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+        imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
+        env: 
+        - name: NODE_ROLE
+          value: controller
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        command: [ "/bin/sh" ]
+        args: [ "-c", "./mqcontroller -c /home/rocketmq/conf/$(POD_NAME)" ]
+        ports:
+        - name: main
+          containerPort: {{ .Values.controller.service.port }}
+          protocol: TCP
+        - name: internal
+          containerPort: {{  .Values.controller.service.internalport }}
+          protocol: TCP
+        livenessProbe:
+        {{- toYaml .Values.controller.livenessProbe | nindent 10 }}
+        readinessProbe:
+        {{- toYaml .Values.controller.readinessProbe | nindent 10 }}
+        startupProbe:
+        {{- toYaml .Values.controller.startupProbe | nindent 10 }}
+        resources: 
+        {{- toYaml .Values.controller.resources  | nindent 10 }}
+        volumeMounts:
+        - mountPath: /home/rocketmq/conf
+          name: controller-config
+        - mountPath: /home/rocketmq/logs
+          name: controller-storage
+          subPath: logs
+        - mountPath: /home/rocketmq/store
+          name: controller-storage
+          subPath: store
+      securityContext:
+        fsGroup: 3000
+      volumes:
+      - name: controller-config
+        configMap:
+          name: {{ include "controller.fullname" . }}-conf
+      {{- if not $.Values.controller.persistence.enabled }}
+      - name: controller-storage
+        emptyDir: { }
+      {{- else if .Values.controller.persistence.existingClaim }}
+      - name: controller-storage
+        persistentVolumeClaim:
+          claimName: {{ printf "%s" (tpl .Values.controller.persistence.existingClaim .) }}
+      {{- end }}
+  {{- if and .Values.controller.persistence.enabled (not .Values.controller.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: controller-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage:  {{ .Values.controller.persistence.size | quote }}
+        {{- if (eq "-" .Values.controller.persistence.storageClass) -}}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.controller.persistence.storageClass }}
+        {{- end -}}        
+  {{- end }}
+
+
+

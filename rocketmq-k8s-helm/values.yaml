@@ -200,3 +200,43 @@ broker:
   nodeSelector: { }
 
   tolerations: [ ]
+
+controller:
+  nameOverride: "controller"
+  fullnameOverride: ""
+  replicas: 3
+  image:
+    registry: docker.io
+    repository: "apache/rocketmq"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  service:
+    port: 9878
+    internalport: 9888
+  resources:
+    limits: 
+      cpu: 2
+      memory: 4Gi
+    requests:
+      cpu: 1
+      memory: 4Gi
+  readinessProbe:
+    tcpSocket:
+      port: 9878
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  livenessProbe:
+    tcpSocket:
+      port: 9878
+    periodSeconds: 10
+  startupProbe:
+    tcpSocket:
+      port: 9878
+    failureThreshold: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+  config: ""
+  persistence:
+    enabled: false
+    size: 20Gi
