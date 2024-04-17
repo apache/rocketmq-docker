@@ -2,6 +2,7 @@
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
+{{- if eq .Values.controller.enable true }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,3 +11,4 @@ metadata:
     {{- include "controller.labels" . | nindent 4 }}
 data:
 {{- include "controller.config" . }}
+{{- end }}

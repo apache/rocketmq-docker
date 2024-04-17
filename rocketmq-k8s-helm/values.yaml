@@ -202,6 +202,7 @@ broker:
   tolerations: [ ]
 
 controller:
+  enable: true
   nameOverride: "controller"
   fullnameOverride: ""
   replicas: 3

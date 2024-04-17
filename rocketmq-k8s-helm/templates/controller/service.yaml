@@ -2,6 +2,7 @@
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
+{{- if eq .Values.controller.enable true }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -23,3 +24,4 @@ spec:
   publishNotReadyAddresses: true
   selector:
     {{- include "controller.selectorLabels" . | nindent 4 }}
+{{- end }}
