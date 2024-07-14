@@ -57,11 +57,11 @@ case "${BASE_IMAGE}" in
     alpine)
         start_broker -alpine
     ;;
-    centos)
+    ubuntu|centos)
         start_broker
     ;;
     *)
-        echo "${BASE_IMAGE} is not supported, supported base images: centos, alpine"
+        echo "${BASE_IMAGE} is not supported, supported base images: ubuntu, alpine, centos (deprecated)"
         exit -1
     ;;
 esac

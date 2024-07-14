@@ -34,13 +34,13 @@ LATEST_VERSION=$(curl -s https://archive.apache.org/dist/rocketmq/ | awk -F '>' 
 
 checkVersion ${LATEST_VERSION}
 
-baseImages=("alpine" "centos")
+baseImages=("alpine" "ubuntu")
 
 for baseImage in ${baseImages[@]}
 do
     echo "Building image of version ${LATEST_VERSION}, base-image ${baseImage}"
     bash build-image.sh ${LATEST_VERSION} ${baseImage}
-    if [ "${baseImage}" = "centos" ];then
+    if [ "${baseImage}" = "ubuntu" ];then
         TAG=${LATEST_VERSION}
     else
         TAG=${LATEST_VERSION}-${baseImage}

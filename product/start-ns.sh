@@ -45,11 +45,11 @@ case "${BASE_IMAGE}" in
     alpine)
         start_namesrv -alpine
     ;;
-    centos)
+    ubuntu|centos)
         start_namesrv
     ;;
     *)
-        echo "${BASE_IMAGE} is not supported, supported base images: centos, alpine"
+        echo "${BASE_IMAGE} is not supported, supported base images: ubuntu, alpine, centos (deprecated)"
         exit -1
     ;;
 esac
