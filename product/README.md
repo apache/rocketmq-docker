@@ -35,7 +35,7 @@ How to config a 2m-2s-async cluster in Docker style.
 
 Note: You can skip this step if you use an existing nameserver cluster
 
-1. Confirm the host machine where the nameserver is to be deployed and copy the product directory into the host. Determine the directory (DATA_HOME) where the container persistences content (logs/storage) on the host,  as well as the RocketMQ image version (ROCKETMQ_VERSION) and base image alpine or centos (BASE_IMAGE)
+1. Confirm the host machine where the nameserver is to be deployed and copy the product directory into the host. Determine the directory (DATA_HOME) where the container persistences content (logs/storage) on the host,  as well as the RocketMQ image version (ROCKETMQ_VERSION) and base image alpine or ubuntu (BASE_IMAGE)
 
 2. Run the script start-ns.sh, for example:
 

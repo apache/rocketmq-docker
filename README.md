@@ -36,7 +36,7 @@ cd image-build
 sh build-image.sh RMQ-VERSION BASE-IMAGE
 ```
 
-> Tip: The supported RMQ-VERSIONs can be obtained from [here](https://archive.apache.org/dist/rocketmq/). The supported BASE-IMAGEs are [centos, alpine]. For example: ```sh build-image.sh 4.5.0 alpine```
+> Tip: The supported RMQ-VERSIONs can be obtained from [here](https://archive.apache.org/dist/rocketmq/). The supported BASE-IMAGEs are [ubuntu, alpine]. For example: ```sh build-image.sh 4.5.0 alpine```
 
 ### B. Stage a specific version
 
@@ -134,7 +134,7 @@ cd image-build
 ./update.sh 
 ```
 
-This script will get the latest release version of RocketMQ and build the docker images based on ```alpine``` and ```centos``` respectively, then push the new images to the current official repository ```apache/rocketmq```.
+This script will get the latest release version of RocketMQ and build the docker images based on ```alpine``` and ```ubuntu``` respectively, then push the new images to the current official repository ```apache/rocketmq```.
 
 ### How to verify RocketMQ works well
 
