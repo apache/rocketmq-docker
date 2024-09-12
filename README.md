@@ -54,7 +54,7 @@ After executing the above shell script, (e.g.  sh stage.sh 4.5.0), it will gener
 Run: 
 
 ```
-cd stages/4.5.0 
+cd stages/4.5.0/templates 
 
 ./play-docker.sh alpine
 
@@ -65,7 +65,7 @@ cd stages/4.5.0
 Run:
 
 ```
-cd stages/4.5.0 
+cd stages/4.5.0/templates 
 
 ./play-docker-compose.sh
 
@@ -77,7 +77,7 @@ cd stages/4.5.0
 Run:
 
 ```
-cd stages/4.5.0 
+cd stages/4.5.0/templates 
 
 ./play-kubernetes.sh
 
@@ -88,7 +88,7 @@ cd stages/4.5.0
 Run: (Note: This feature needs RMQ version is 4.4.0 or above)
 
 ```
-cd stages/4.5.0 
+cd stages/4.5.0/templates 
 
 ./play-docker-dledger.sh
 
@@ -101,7 +101,7 @@ Run:  (It will startup nameserver and broker with SSL enabled style. The client 
 You can see detailed TLS config instruction from [here](templates/ssl/README.md) 
 
 ```
-cd stages/4.5.0 
+cd stages/4.5.0/templates 
 
 ./play-docker-tls.sh
 
