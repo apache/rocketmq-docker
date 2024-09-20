@@ -122,7 +122,7 @@ calculate_heap_sizes()
     fi
 }
 
-if [ -z "$jvmMemory" ]; then
+if [ -z "$BROKER_MEM" ]; then
     # Dynamically calculate parameters, for reference.
     calculate_heap_sizes
     Xms=$MAX_HEAP_SIZE
@@ -131,7 +131,7 @@ if [ -z "$jvmMemory" ]; then
     MaxDirectMemorySize=$MAX_HEAP_SIZE
     JAVA_OPT="${JAVA_OPT} -server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn} -XX:MaxDirectMemorySize=${MaxDirectMemorySize}"
 else
-    JAVA_OPT="${JAVA_OPT} -server ${jvmMemory}"
+    JAVA_OPT="${JAVA_OPT} -server ${BROKER_MEM}"
 fi
 
 JAVA_OPT="${JAVA_OPT} -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0 -XX:SurvivorRatio=8"
