@@ -122,14 +122,14 @@ calculate_heap_sizes()
     fi
 }
 
-if [ -z "$BROKER_MEM" ]; then
+if [ -z "$NAMESRV_MEM" ]; then
     # Dynamically calculate parameters.
     calculate_heap_sizes
-    BROKER_MEM="-Xms${MAX_HEAP_SIZE} -Xmx${MAX_HEAP_SIZE} -Xmn${HEAP_NEWSIZE}"
+    NAMESRV_MEM="-Xms${MAX_HEAP_SIZE} -Xmx${MAX_HEAP_SIZE} -Xmn${HEAP_NEWSIZE}"
 fi
 
 # Set for `JAVA_OPT`.
-JAVA_OPT="${JAVA_OPT} -server ${BROKER_MEM}"
+JAVA_OPT="${JAVA_OPT} -server ${NAMESRV_MEM}"
 JAVA_OPT="${JAVA_OPT} -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSInitiatingOccupancyFraction=70 -XX:+CMSParallelRemarkEnabled -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+CMSClassUnloadingEnabled -XX:SurvivorRatio=8  -XX:-UseParNewGC"
 JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:/dev/shm/rmq_srv_gc.log -XX:+PrintGCDetails"
 JAVA_OPT="${JAVA_OPT} -XX:-OmitStackTraceInFastThrow"
