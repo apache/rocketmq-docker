@@ -188,14 +188,14 @@ broker:
   service:
     port: 10911
 
-  jvmMemory: " -Xms2g -Xmx2g -Xmn1g -XX:MaxDirectMemorySize=4g "
+  jvmMemory: " -Xms4g -Xmx4g -Xmn2g -XX:MaxDirectMemorySize=8g "
   resources:
     limits:
       cpu: 2
-      memory: 4Gi
+      memory: 6Gi
     requests:
       cpu: 2
-      memory: 4Gi
+      memory: 6Gi
 
   nodeSelector: { }
 
