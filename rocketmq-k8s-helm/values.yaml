@@ -206,7 +206,6 @@ controller:
   fullnameOverride: ""
   replicas: 3
   image:
-    registry: docker.io
     repository: "apache/rocketmq"
     tag: "latest"
     pullPolicy: IfNotPresent
