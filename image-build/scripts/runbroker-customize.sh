@@ -122,7 +122,17 @@ calculate_heap_sizes()
     fi
 }
 
-calculate_heap_sizes
+if [ -z "$BROKER_MEM" ]; then
+    # Dynamically calculate parameters, for reference.
+    calculate_heap_sizes
+    Xms=$MAX_HEAP_SIZE
+    Xmx=$MAX_HEAP_SIZE
+    Xmn=$HEAP_NEWSIZE
+    MaxDirectMemorySize=$MAX_HEAP_SIZE
+    JAVA_OPT="${JAVA_OPT} -server -Xms${Xms} -Xmx${Xmx} -Xmn${Xmn} -XX:MaxDirectMemorySize=${MaxDirectMemorySize}"
+else
+    JAVA_OPT="${JAVA_OPT} -server ${BROKER_MEM}"
+fi
 
 # Dynamically calculate parameters, for reference.
 Xms=$MAX_HEAP_SIZE
@@ -136,7 +146,6 @@ JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:/dev/shm/mq_gc_%p.log -XX:+PrintGCDeta
 JAVA_OPT="${JAVA_OPT} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=30m"
 JAVA_OPT="${JAVA_OPT} -XX:-OmitStackTraceInFastThrow"
 JAVA_OPT="${JAVA_OPT} -XX:+AlwaysPreTouch"
-JAVA_OPT="${JAVA_OPT} -XX:MaxDirectMemorySize=${MaxDirectMemorySize}"
 JAVA_OPT="${JAVA_OPT} -XX:-UseLargePages -XX:-UseBiasedLocking"
 JAVA_OPT="${JAVA_OPT} -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext:${BASE_DIR}/lib"
 #JAVA_OPT="${JAVA_OPT} -Xdebug -Xrunjdwp:transport=dt_socket,address=9555,server=y,suspend=n"
