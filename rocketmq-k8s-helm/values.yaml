@@ -188,7 +188,7 @@ broker:
   service:
     port: 10911
 
-  jvmMemory: " -Xms4g -Xmx4g -Xmn2g -XX:MaxDirectMemorySize=8g "
+  jvmMemory: " -Xms2g -Xmx2g -Xmn1g -XX:MaxDirectMemorySize=4g "
   resources:
     limits:
       cpu: 2
