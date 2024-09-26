@@ -52,7 +52,7 @@ export CLASSPATH=.:${BASE_DIR}/conf:${CLASSPATH}
 #===========================================================================================
 
 # Set default JVM memory options if not provided
-DEFAULT_HEAP_OPTS="-Xms1g -Xmx1g -Xmn512M -XX:MaxDirectMemorySize=1g"
+DEFAULT_HEAP_OPTS="-Xms2g -Xmx2g -Xmn1g -XX:MaxDirectMemorySize=1g"
 HEAP_OPTS=${HEAP_OPTS:-$DEFAULT_HEAP_OPTS}
 
 # Setting JAVA options
