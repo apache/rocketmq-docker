@@ -39,7 +39,7 @@ spec:
       {{- end }}
       containers: 
       - name: controller
-        image: "{{ .Values.controller.image.registry }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
+        image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         env: 
         - name: NODE_ROLE

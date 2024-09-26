@@ -35,7 +35,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            - name: BROKER_MEM
+            - name: HEAP_OPTS
               value: {{ .Values.broker.jvmMemory }}
             - name: NAMESRV_ADDR
               value: {{ include "rocketmq-nameserver.fullname" . }}:9876

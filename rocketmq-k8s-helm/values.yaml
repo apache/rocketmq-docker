@@ -192,10 +192,10 @@ broker:
   resources:
     limits:
       cpu: 2
-      memory: 4Gi
+      memory: 6Gi
     requests:
       cpu: 2
-      memory: 4Gi
+      memory: 6Gi
 
   nodeSelector: { }
 
@@ -206,7 +206,6 @@ controller:
   fullnameOverride: ""
   replicas: 3
   image:
-    registry: docker.io
     repository: "apache/rocketmq"
     tag: "latest"
     pullPolicy: IfNotPresent
