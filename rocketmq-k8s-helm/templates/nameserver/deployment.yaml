@@ -14,8 +14,10 @@ spec:
         {{- include "rocketmq-nameserver.selectorLabels" . | nindent 8 }}
         component: nameserver
     spec:
+      {{- with .Values.proxy.imagePullSecrets }}
       imagePullSecrets:
-        - name: onetest-regcred
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: nameserver
           image: {{ include "rocketmq-nameserver.namesrvImage" .  }}

@@ -18,8 +18,10 @@ spec:
       labels:
         {{- include "rocketmq-proxy.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.proxy.imagePullSecrets }}
       imagePullSecrets:
-        - name: onetest-regcred
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: proxy
           image: {{ include "rocketmq-proxy.proxyImage" . }}
