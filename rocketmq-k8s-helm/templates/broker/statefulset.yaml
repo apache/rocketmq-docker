@@ -16,8 +16,10 @@ spec:
       labels:
         {{- include "rocketmq-broker.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.proxy.imagePullSecrets }}
       imagePullSecrets:
-        - name: onetest-regcred
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: broker
           image: {{ include "rocketmq-broker.brokerImage" . }}
@@ -98,5 +100,5 @@ spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            storage: {{ .Values.broker.store.data.size }}
+            storage: {{ .Values.broker.persistence.size }}
   {{- end }}

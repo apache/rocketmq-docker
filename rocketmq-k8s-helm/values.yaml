@@ -159,6 +159,7 @@ broker:
     repository: "apache/rocketmq"
     tag: "latest"
 
+  imagePullSecrets: [ ]
   partition: 0
   persistence:
     enabled: false
@@ -178,12 +179,6 @@ broker:
     nameServerHeadlessAddr: ""
 
   config: ""
-
-  store:
-    data:
-      size: 10Gi
-    log:
-      size: 10Gi
 
   service:
     port: 10911
@@ -209,6 +204,7 @@ controller:
     repository: "apache/rocketmq"
     tag: "latest"
     pullPolicy: IfNotPresent
+    imagePullSecrets: [ ]
   service:
     port: 9878
     internalport: 9888
@@ -238,4 +234,6 @@ controller:
   config: ""
   persistence:
     enabled: false
+    existingClaim: ""
+    storageClass: ""
     size: 20Gi
