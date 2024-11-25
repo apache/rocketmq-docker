@@ -1,5 +1,5 @@
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: rocketmq-ns-deployment
 spec:
@@ -31,7 +31,7 @@ spec:
         emptyDir: {}
 ---          
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: rocketmq-broker-deployment
 spec:
