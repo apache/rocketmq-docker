@@ -78,13 +78,15 @@ spec:
             - mountPath: /home/rocketmq/logs
               name: broker-storage
               subPath: home/rocketmq/rocketmq-broker
-            - mountPath: /root/store
+            - mountPath: /home/rocketmq/store
               name: broker-storage
               subPath: store/rocketmq-broker
       {{- with .Values.broker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      securityContext:
+        fsGroup: 3000
       volumes:
         - name: broker-config
           configMap:
