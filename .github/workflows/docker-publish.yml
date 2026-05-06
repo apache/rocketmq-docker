@@ -53,11 +53,11 @@ jobs:
 
       - name: Set up Docker Buildx
         if: env.exists == 'false'
-        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd
 
       - name: Log into registry ${{ env.REGISTRY }}
         if: env.exists == 'false' && github.event_name != 'pull_request'
-        uses: docker/login-action@v3
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKERHUB_USER }}
@@ -66,7 +66,7 @@ jobs:
       - name: Build and push Docker image
         id: build-and-push
         if: env.exists == 'false'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f
         with:
           context: "{{defaultContext}}:image-build"
           file: Dockerfile-ubuntu
