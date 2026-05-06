@@ -26,14 +26,25 @@ error_exit ()
 
 find_java_home()
 {
+    if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+        echo "Using JAVA_HOME from environment: $JAVA_HOME"
+        return
+    fi
+
     case "`uname`" in
         Darwin)
             JAVA_HOME=$(/usr/libexec/java_home)
-        ;;
+            ;;
         *)
             JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-        ;;
+            ;;
     esac
+
+    if [ ! -x "$JAVA_HOME/bin/java" ]; then
+        error_exit "Java executable not found. Please set JAVA_HOME."
+    fi
+
+    echo "Found JAVA_HOME: $JAVA_HOME"
 }
 
 find_java_home
